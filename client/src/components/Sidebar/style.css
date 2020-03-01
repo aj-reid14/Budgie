@@ -1,0 +1,28 @@
+#sidebar {
+    position: fixed;
+    height: 100%;
+    width: 75px;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    background-color: grey;
+}
+
+#create-budget {
+    position: relative;
+    margin: auto;
+    background-color: yellow;
+    width: 100%;
+    height: 34.5px;
+    top: 50px;
+    z-index: -5;
+
+    border: 2px solid black;
+    border-color: black;
+    border-radius: 17.25px;
+}
+
+#create-budget:hover {
+    border-color: white;
+}
