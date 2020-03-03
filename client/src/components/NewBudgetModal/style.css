@@ -1,0 +1,9 @@
+.modal-content-group {
+    border: solid black;
+    border-width: 1px 0;
+}
+
+#btn-add-category {
+    height: 100%;
+    margin: auto;
+}
