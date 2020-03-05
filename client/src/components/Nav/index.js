@@ -1,8 +1,9 @@
 import React from "react";
+import "./style.css";
 
 function Nav() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success">
+    <nav id="navbar" className="navbar navbar-expand-lg navbar-dark bg-success">
       <a className="navbar-brand" href="/">
         Budgie
       </a>
