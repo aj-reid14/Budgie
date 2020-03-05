@@ -14,6 +14,12 @@ class NewBudgetModal extends Component {
         tableContent: []
     }
 
+    onSave = (event) => {
+        if (typeof this.props.budgetData !== "undefined") {
+            this.props.budgetData(event.target.value);            
+        }
+    }
+
     addCategoryData = () => {
 
         let newCategoryData = this.state.rawCategoryData;
@@ -150,7 +156,8 @@ class NewBudgetModal extends Component {
                                             <button
                                                 id="btn-save-budget"
                                                 type="button"
-                                                onClick={this.createNewBudget}
+                                                data-dismiss="modal"
+                                                onClick={this.onSave}
                                                 class="btn btn-success">Save</button>
                                         </Row>
 

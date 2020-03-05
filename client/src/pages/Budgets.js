@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Sidebar from "../components/Sidebar";
 import NewBudgetModal from "../components/NewBudgetModal";
-import { Input, TextArea, FormBtn } from "../components/Form";
-import { Col, Row, Container } from "../components/Grid";
+import PieChart from "../components/PieChart";
+import { Container } from "../components/Grid";
 import "./Budget.css";
 
 let containerStyle = {
@@ -13,20 +13,26 @@ let containerStyle = {
 class Budget extends Component {
 
     state = {
-        budgetName: "no budget created..."
+        budgetData: null
+    }
+
+    getBudgetData = (budgetData) => {
+        this.setState({
+            budgetData
+        })
     }
 
     render() {
+
+        const {budgetData} = this.state;
 
         return (
 
             <Container>
                 
                 <Sidebar />
-                <h1>{this.state.budgetName}</h1>
-                <div id="piechart-area"></div>
-                <NewBudgetModal />
-                <h3> total income</h3>
+                <NewBudgetModal getBudgetData={this.getBudgetData}/>
+                <PieChart budgetData={budgetData}/>
 
             </Container>
 
