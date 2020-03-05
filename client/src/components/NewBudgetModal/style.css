@@ -8,6 +8,11 @@
     margin: auto;
 }
 
+#btn-save-budget {
+    margin: auto;
+    margin-top: 10px;
+}
+
 #category-table td, #category-table th {
     border: 1px solid black;
     text-align: center;

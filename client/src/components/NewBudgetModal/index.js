@@ -10,13 +10,13 @@ class NewBudgetModal extends Component {
         newBudgetTotal: 0,
         newCategoryName: "",
         newCategoryAmount: 0,
-        categoryData: [],
-        testContent: []
+        rawCategoryData: [],
+        tableContent: []
     }
 
     addCategoryData = () => {
 
-        let newCategoryData = this.state.categoryData;
+        let newCategoryData = this.state.rawCategoryData;
         let content = [];
 
         newCategoryData.push(
@@ -35,13 +35,18 @@ class NewBudgetModal extends Component {
                             </button>
                             {category.name}
                         </td>
-                        <td>{category.amount}</td>
+                        <td>${category.amount}</td>
                     </tr>
                 )
             )
         });
 
-        this.setState({ categoryData: newCategoryData, testContent: content, newCategoryName: "", newCategoryAmount: "" });
+        this.setState({
+            rawCategoryData: newCategoryData,
+            tableContent: content,
+            newCategoryName: "",
+            newCategoryAmount: 0
+        });
 
     }
 
@@ -51,6 +56,10 @@ class NewBudgetModal extends Component {
         this.setState({
             [name]: value
         });
+    }
+
+    createNewBudget = () => {
+
     }
 
     render() {
@@ -132,9 +141,17 @@ class NewBudgetModal extends Component {
                                                         <th>Name</th>
                                                         <th>Amount</th>
                                                     </tr>
-                                                    {this.state.testContent}
+                                                    {this.state.tableContent}
                                                 </tbody>
                                             </table>
+                                        </Row>
+
+                                        <Row>
+                                            <button
+                                                id="btn-save-budget"
+                                                type="button"
+                                                onClick={this.createNewBudget}
+                                                class="btn btn-success">Save</button>
                                         </Row>
 
                                     </Container>
