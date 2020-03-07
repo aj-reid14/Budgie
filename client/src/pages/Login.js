@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { Input, TextArea, FormBtn } from "../components/Form";
 import { Col, Row, Container } from "../components/Grid";
+import API from "../utils/API"
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+
 
 class Login extends Component {
 
@@ -20,9 +24,18 @@ class Login extends Component {
         event.preventDefault();
         if (this.state.username && this.state.password) {
             // Determine if login or signup was clicked
-
             // Add user information to database
         }
+        API.login(this.state)
+        .then(res =>
+        {
+            console.log(res.data)
+        }
+        )
+        .catch(() =>
+        {
+            console.log("error found")
+        })
     };
 
     render() {
@@ -50,13 +63,13 @@ class Login extends Component {
                                 onClick={this.handleFormSubmit}
                             >
                                 Login
-                  </FormBtn>
+                    </FormBtn>
                             <FormBtn
                                 disabled={!((this.state.username && this.state.password) && this.state.password.length >= 8)}
                                 onClick={this.handleFormSubmit}
                             >
                                 Sign Up
-                  </FormBtn>
+                    </FormBtn>
                         </form>
                     </Col>
                     <Col size="md-4"></Col>

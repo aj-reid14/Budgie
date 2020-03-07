@@ -33,5 +33,11 @@ module.exports = {
       .then(dbModel => dbModel.remove())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  },
+  login: function(req,res) {
+    // jwt function here
+    console.log(req.body)
+    // check in database if user exists
+    res.json("user found")
   }
 };
