@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Sidebar from "../components/Sidebar";
 import NewBudgetModal from "../components/NewBudgetModal";
-import PieChart from "../components/PieChart";
+import PieChart from "../components/PieChart/PieChart.js";
 import { Container } from "../components/Grid";
 import "./Budget.css";
 
@@ -12,27 +12,16 @@ let containerStyle = {
 
 class Budget extends Component {
 
-    state = {
-        budgetData: null
-    }
-
-    getBudgetData = (budgetData) => {
-        this.setState({
-            budgetData
-        })
-    }
-
     render() {
 
-        const {budgetData} = this.state;
 
         return (
 
             <Container>
                 
                 <Sidebar />
-                <NewBudgetModal getBudgetData={this.getBudgetData}/>
-                <PieChart budgetData={budgetData}/>
+                <NewBudgetModal />
+                <PieChart />
 
             </Container>
 
