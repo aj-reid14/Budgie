@@ -19,6 +19,8 @@ class Budget extends Component {
         newCategoryAmount: 0,
         rawCategoryData: [],
         tableContent: [],
+        pieData: [],
+        budgetVerified: false,
         budgetCreated: false
     }
 
@@ -53,7 +55,8 @@ class Budget extends Component {
             rawCategoryData: newCategoryData,
             tableContent: content,
             newCategoryName: "",
-            newCategoryAmount: 0
+            newCategoryAmount: 0,
+            budgetVerified: this.verifyBudgetInfo()
         });
 
     }
@@ -64,12 +67,41 @@ class Budget extends Component {
         this.setState({
             [name]: value
         });
+
+        if (name === ("newBudgetName" || "newBudgetTotal")) {
+            this.setState({
+                budgetVerified: this.verifyBudgetInfo()
+            })
+        }
     }
 
     createBudget = () => {
-        this.setState({
-            budgetCreated: true
+
+        let dataPoints = [];
+        let budgetTotal = parseInt(this.state.newBudgetTotal);
+
+        this.state.rawCategoryData.forEach(category => {
+
+            let amount = parseInt(category.amount);
+            
+            dataPoints.push(
+                {label: category.name, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.amount}`}
+            )
         })
+
+        this.setState({
+            budgetCreated: true,
+            pieData: dataPoints
+        })
+    }
+
+    verifyBudgetInfo = () => {
+
+        if ((this.state.rawCategoryData.length != 0) && (this.state.newBudgetTotal > 0) && this.state.newBudgetName != "") {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     render() {
@@ -78,7 +110,8 @@ class Budget extends Component {
 
         if (this.state.budgetCreated) {
             pieChart = (<PieChart
-                            budgetName={this.state.newBudgetName} 
+                            budgetName={this.state.newBudgetName}
+                            pieData={this.state.pieData}
                         />)
         }
 
@@ -166,6 +199,7 @@ class Budget extends Component {
                                                 type="button"
                                                 data-dismiss="modal"
                                                 onClick={this.createBudget}
+                                                disabled={!this.state.budgetVerified}
                                                 class="btn btn-success">Save</button>
                                         </Row>
 

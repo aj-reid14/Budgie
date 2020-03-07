@@ -6,7 +6,8 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 class PieChart extends Component {
 
     state = {
-        budgetName: this.props.budgetName
+        budgetName: this.props.budgetName,
+        pieData: this.props.pieData
     }
 
   render() {
@@ -16,13 +17,14 @@ class PieChart extends Component {
       },
       data: [{				
                 type: "pie",
-                dataPoints: [
-                    { label: "Food",  y: 2, indexLabel: `$100`  },
-                    { label: "Clothes", y: 15,  indexLabel: `$1000`},
-                    { label: "Rent", y: 25  , indexLabel: `$3000`},
-                    { label: "Gas",  y: 30 , indexLabel: `$6000` },
-                    { label: "Misc.",  y: 28 , indexLabel: `$5000` }
-                ]
+                dataPoints: this.state.pieData
+                // dataPoints: [
+                //     { label: "Food",  y: 2, indexLabel: `$100`  },
+                //     { label: "Clothes", y: 15,  indexLabel: `$1000`},
+                //     { label: "Rent", y: 25  , indexLabel: `$3000`},
+                //     { label: "Gas",  y: 30 , indexLabel: `$6000` },
+                //     { label: "Misc.",  y: 28 , indexLabel: `$5000` }
+                // ]
        }]
    }
 		
