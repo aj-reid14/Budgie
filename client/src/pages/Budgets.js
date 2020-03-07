@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Sidebar from "../components/Sidebar";
 import NewBudgetModal from "../components/NewBudgetModal";
-import PieChart from "../components/PieChart/PieChart.js";
+import PieChart from "../components/PieChart";
 import { Container, Row } from "../components/Grid";
 import "./Budget.css";
 
@@ -18,7 +18,8 @@ class Budget extends Component {
         newCategoryName: "",
         newCategoryAmount: 0,
         rawCategoryData: [],
-        tableContent: []
+        tableContent: [],
+        budgetCreated: false
     }
 
     addCategoryData = () => {
@@ -65,7 +66,21 @@ class Budget extends Component {
         });
     }
 
+    createBudget = () => {
+        this.setState({
+            budgetCreated: true
+        })
+    }
+
     render() {
+
+        let pieChart = "";
+
+        if (this.state.budgetCreated) {
+            pieChart = (<PieChart
+                            budgetName={this.state.newBudgetName} 
+                        />)
+        }
 
 
         return (
@@ -73,6 +88,7 @@ class Budget extends Component {
             <Container>
                 
                 <Sidebar />
+
                 <NewBudgetModal>
                 <div className="modal-body">
                                 <form>
@@ -149,6 +165,7 @@ class Budget extends Component {
                                                 id="btn-save-budget"
                                                 type="button"
                                                 data-dismiss="modal"
+                                                onClick={this.createBudget}
                                                 class="btn btn-success">Save</button>
                                         </Row>
 
@@ -156,7 +173,8 @@ class Budget extends Component {
                                 </form>
                             </div>
                 </NewBudgetModal>
-                <PieChart />
+
+                {pieChart}
 
             </Container>
 
