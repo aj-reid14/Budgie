@@ -41,13 +41,13 @@ module.exports = {
   },
   login: function(req,res) {
     let payloadObj = req.body;
-    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
-    console.log(payloadObj)
-    console.log(signedjwt)
+    // let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
+    // console.log(payloadObj)
+    // console.log(signedjwt)
     // console.log("signed")
     // jwt function here
-    // console.log(req.body)
+    console.log(req.body)
     // check in database if user exists
-    // res.json("user found")
+    res.json("user found")
   }
 };
