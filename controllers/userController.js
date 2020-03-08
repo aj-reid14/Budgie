@@ -1,4 +1,9 @@
 const db = require("../models");
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const PUB_KEY = fs.readFileSync(__dirname + '/id_rsa_pub.pem', 'utf8');
+const PRIV_KEY = fs.readFileSync(__dirname + '/id_rsa_priv.pem', 'utf8');
+
 
 // Defining methods for the userController
 module.exports = {
@@ -35,9 +40,14 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   login: function(req,res) {
+    let payloadObj = req.body;
+    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
+    console.log(payloadObj)
+    console.log(signedjwt)
+    // console.log("signed")
     // jwt function here
-    console.log(req.body)
+    // console.log(req.body)
     // check in database if user exists
-    res.json("user found")
+    // res.json("user found")
   }
 };

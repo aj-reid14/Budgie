@@ -18,7 +18,7 @@ export default {
     return axios.post("/api/books", bookData);
   },
   login: function(data) {
-    console.log(data)
+    // console.log(data)
     return axios.post("/api/home/login", data)
   }
 };
