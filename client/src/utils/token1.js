@@ -2,12 +2,15 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const fs = require('fs');
-let payloadObj = "../../../models/user.js"
+let payloadObj = "./models/user.js"
+// let payloadObj = "../../../models/user.js"
+// const User = mongoose.model('User', UserSchema);
 let PRIV_KEY = "./default.json"
 
+
 let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
+console.log(payloadObj)
   
-const User = mongoose.model('User', UserSchema);
 
 //function to validate user 
 function validateUser(user) {

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-const signedjwt = require("./token.js")
+const signedjwt = require("./token1.js")
 let PRIV_KEY = "./default.json"
 
 
