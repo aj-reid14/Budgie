@@ -20,13 +20,31 @@ class Login extends Component {
         });
     };
 
-    handleFormSubmit = event => {
+    handleFormLogin = event => {
         event.preventDefault();
         if (this.state.username && this.state.password) {
             // Determine if login or signup was clicked
             // Add user information to database
         }
         API.login(this.state)
+        .then(res =>
+        {
+            console.log(res.data)
+        }
+        )
+        .catch(() =>
+        {
+            console.log("error found")
+        })
+    };
+
+    handleFormSubmit = event => {
+        event.preventDefault();
+        if (this.state.username && this.state.password) {
+            // Determine if login or signup was clicked
+            // Add user information to database
+        }
+        API.register(this.state)
         .then(res =>
         {
             console.log(res.data)
@@ -60,7 +78,7 @@ class Login extends Component {
                             />
                             <FormBtn
                                 disabled={!((this.state.username && this.state.password) && this.state.password.length >= 8)}
-                                onClick={this.handleFormSubmit}
+                                onClick={this.handleFormLogin}
                             >
                                 Login
                     </FormBtn>

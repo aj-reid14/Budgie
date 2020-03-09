@@ -32,6 +32,10 @@ class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route component={NoMatch} />
         </Switch>
+        <Switch>
+          <Route exact path="/budget/:id" component={Budget} />
+          <Route component={NoMatch} />
+        </Switch>
           </div>
       </div>
     </Router>

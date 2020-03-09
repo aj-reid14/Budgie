@@ -30,7 +30,7 @@ module.exports = {
     db.User
       .findOneAndUpdate({ _id: req.params.id }, req.body)
       .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err));
+      .catch(err => res.status(422).json(err));s
   },
   remove: function(req, res) {
     db.User
@@ -39,15 +39,53 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-  login: function(req,res) {
-    let payloadObj = req.body;
-    // let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
-    // console.log(payloadObj)
-    // console.log(signedjwt)
-    // console.log("signed")
+  register: function(req,res) {
     // jwt function here
-    console.log(req.body)
+    let payloadObj = req.body;
+    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, {algorithm: 'RS256'});
+    // console.log(payloadObj)
+    // console.log(req.body)
+    console.log(signedjwt)
     // check in database if user exists
     res.json("user found")
+    // db.User
+    // .create(req.body)
+    // .then(dbModel => res.json(dbModel))
+    // .catch(err => res.status(422).json(err));
+  },
+  login: function(req,res) {
+    // jwt function here
+    let payloadObj = req.body;
+    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
+    // console.log(payloadObj)
+    console.log(signedjwt)
+    // console.log(req.body)
+    // check in database if user exists
+    res.json("user found")
+  },
+  verify: function(req,res) {
+
+    let signedjwt = req.body;
+
+    jwt.verify(signedjwt, PUB_KEY, { algorithms: ['RS256'] }, (err, payload) => {
+      if (err) {
+        switch (err.name) {
+          case 'TokenExpiredError':
+            console.log('Whoops, your token has expired!');
+            break;
+          case 'JsonWebTokenError':
+            console.log('That JWT is malformed!');
+            break;    
+          default:
+            console.log(err.name);
+            break;
+        }
+      } else {
+        console.log('Your JWT was successfully validated!');
+      }
+      // Both should be the same
+      // console.log(signedjwt);
+      // console.log(payload);
+    });
   }
 };
