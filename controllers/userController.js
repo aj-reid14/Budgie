@@ -1,9 +1,8 @@
 const db = require("../models");
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-const PUB_KEY = fs.readFileSync(__dirname + '/id_rsa_pub.pem', 'utf8');
-const PRIV_KEY = fs.readFileSync(__dirname + '/id_rsa_priv.pem', 'utf8');
 let config = require("./config");
+let bcrypt = require("bcryptjs");
 
 
 // Defining methods for the userController
@@ -42,22 +41,35 @@ module.exports = {
   },
   register: function(req,res) {
     // console.log(req.body)
-    db.User
-      .create({username: req.body.username,
-          password: req.body.password},
-          function (err, user) {
+    let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+
+    db.User.create(
+      {username: req.body.username,
+      password: hashedPassword},
+        function (err, user) {
           if (err) {
             console.log(err)
             return res.status(500).send("Couldn't register User.")
           }
           let token = jwt.sign({ id: user.id }, config.secret, {
-              expiresIn: 86400
+            expiresIn: 86400
           });
           res.status(200).send({ auth: true, token: token });
         })
   },
   login: function(req,res) {
-
+    db.User.findOne(
+      {username: req.body.username},
+      function (err, user) {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!user) return res.status(404).send('No user found.');
+      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+      var token = jwt.sign({ id: user._id }, config.secret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+      res.status(200).send({ auth: true, token: token });
+    })
   },
   verify: function(req,res) {
 
