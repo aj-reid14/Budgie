@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const PUB_KEY = fs.readFileSync(__dirname + '/id_rsa_pub.pem', 'utf8');
 const PRIV_KEY = fs.readFileSync(__dirname + '/id_rsa_priv.pem', 'utf8');
+let config = require("./config");
 
 
 // Defining methods for the userController
@@ -40,28 +41,23 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   register: function(req,res) {
-    // jwt function here
-    let payloadObj = req.body;
-    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, {algorithm: 'RS256'});
-    // console.log(payloadObj)
     // console.log(req.body)
-    console.log(signedjwt)
-    // check in database if user exists
-    res.json("user found")
-    // db.User
-    // .create(req.body)
-    // .then(dbModel => res.json(dbModel))
-    // .catch(err => res.status(422).json(err));
+    db.User
+      .create({username: req.body.username,
+          password: req.body.password},
+          function (err, user) {
+          if (err) {
+            console.log(err)
+            return res.status(500).send("Couldn't register User.")
+          }
+          let token = jwt.sign({ id: user.id }, config.secret, {
+              expiresIn: 86400
+          });
+          res.status(200).send({ auth: true, token: token });
+        })
   },
   login: function(req,res) {
-    // jwt function here
-    let payloadObj = req.body;
-    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
-    // console.log(payloadObj)
-    console.log(signedjwt)
-    // console.log(req.body)
-    // check in database if user exists
-    res.json("user found")
+
   },
   verify: function(req,res) {
 
