@@ -36,6 +36,9 @@ class Login extends Component {
         {
             console.log("error found")
         })
+
+        window.location.pathname = "/home";
+
     };
 
     handleFormSubmit = event => {
@@ -54,6 +57,8 @@ class Login extends Component {
         {
             console.log("error found")
         })
+
+        window.location.pathname = "/home";
     };
 
     render() {

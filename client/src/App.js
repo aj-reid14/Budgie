@@ -23,18 +23,9 @@ class App extends Component {
 
       <div className="container">
         <Switch>
-          <Route exact path="/" component={Budget} />
-          {/* <Route exact path="/books" component={Books} />
-          <Route exact path="/books/:id" component={Detail} /> */}
-          <Route component={NoMatch} />
-        </Switch>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route component={NoMatch} />
-        </Switch>
-        <Switch>
+          <Route exact path="/" component={Login} />
+          <Route exact path="/home" component={Budget} />
           <Route exact path="/budget/:id" component={Budget} />
-          <Route component={NoMatch} />
         </Switch>
           </div>
       </div>
