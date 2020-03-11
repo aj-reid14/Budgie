@@ -22,7 +22,13 @@ class Budget extends Component {
         tableContent: [],
         pieData: [],
         budgetVerified: false,
-        budgetCreated: false
+        budgetCreated: false,
+        userBudgets: []
+    }
+
+    componentDidMount() {
+        API.getUser("testUser")
+        .then(res => console.log(res));
     }
 
     addCategoryData = () => {
@@ -90,8 +96,8 @@ class Budget extends Component {
             )
         })
 
-        API.createUser("testUser1", {
-            username: "testUser1",
+        API.createUser("testUser", {
+            username: "testUser",
             password: "pkpkpkpk",
             budgets: [{
                 budgetName: this.state.newBudgetName,

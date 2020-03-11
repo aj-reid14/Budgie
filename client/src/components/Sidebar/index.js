@@ -8,7 +8,6 @@ class Sidebar extends Component {
         return (
             <div id="sidebar">
                 {this.props.children}
-                <div className="user-bdgt"></div>
                 <div id="create-budget" data-toggle="modal" data-target="#new-budget-modal"></div>
             </div>
         )
