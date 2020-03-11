@@ -1,8 +1,8 @@
 const db = require("../models");
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-const PUB_KEY = fs.readFileSync(__dirname + '/id_rsa_pub.pem', 'utf8');
-const PRIV_KEY = fs.readFileSync(__dirname + '/id_rsa_priv.pem', 'utf8');
+let config = require("./config");
+let bcrypt = require("bcryptjs");
 
 
 // Defining methods for the userController
@@ -40,52 +40,79 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   register: function(req,res) {
-    // jwt function here
-    let payloadObj = req.body;
-    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, {algorithm: 'RS256'});
-    // console.log(payloadObj)
     // console.log(req.body)
-    console.log(signedjwt)
-    // check in database if user exists
-    res.json("user found")
-    // db.User
-    // .create(req.body)
-    // .then(dbModel => res.json(dbModel))
-    // .catch(err => res.status(422).json(err));
+    let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+
+    db.User.create(
+      {username: req.body.username,
+      password: hashedPassword},
+        function (err, user) {
+          if (err) {
+            console.log(err)
+            return res.status(500).send("Couldn't register User.")
+          }
+          let token = jwt.sign({ id: user.id }, config.secret, {
+            expiresIn: 86400
+          });
+          res.status(200).send({ auth: true, token: token });
+        })
   },
   login: function(req,res) {
-    // jwt function here
-    let payloadObj = req.body;
-    let  signedjwt = jwt.sign(payloadObj, PRIV_KEY, { algorithm: 'RS256'});
-    // console.log(payloadObj)
-    console.log(signedjwt)
-    // console.log(req.body)
-    // check in database if user exists
-    res.json("user found")
+    db.User.findOne(
+      {username: req.body.username},
+      function (err, user) {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!user) return res.status(404).send('No user found.');
+
+      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+
+      if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+      var token = jwt.sign({ id: user._id }, config.secret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+      res.status(200).send({ auth: true, token: token });
+    })
   },
   verify: function(req,res) {
 
-    let signedjwt = req.body;
+    let token = req.headers['x-access-token'];
+    if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
 
-    jwt.verify(signedjwt, PUB_KEY, { algorithms: ['RS256'] }, (err, payload) => {
-      if (err) {
-        switch (err.name) {
-          case 'TokenExpiredError':
-            console.log('Whoops, your token has expired!');
-            break;
-          case 'JsonWebTokenError':
-            console.log('That JWT is malformed!');
-            break;    
-          default:
-            console.log(err.name);
-            break;
-        }
-      } else {
-        console.log('Your JWT was successfully validated!');
-      }
-      // Both should be the same
-      // console.log(signedjwt);
-      // console.log(payload);
+    jwt.verify(token, config.secret, function (err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+
+      User.findById(decoded.id,
+        { password: 0 }, // projection
+        function (err, user) {
+          if (err) return res.status(500).send("There was a problem finding the user.");
+          if (!user) return res.status(404).send("No user found.");
+          res.status(200).send(user);
+        });
     });
-  }
+  },
+  // verify: function(req,res) {
+  //   let signedjwt = req.body;
+
+  //   jwt.verify(signedjwt, PUB_KEY, { algorithms: ['RS256'] }, (err, payload) => {
+  //     if (err) {
+  //       switch (err.name) {
+  //         case 'TokenExpiredError':
+  //           console.log('Whoops, your token has expired!');
+  //           break;
+  //         case 'JsonWebTokenError':
+  //           console.log('That JWT is malformed!');
+  //           break;    
+  //         default:
+  //           console.log(err.name);
+  //           break;
+  //       }
+  //     } else {
+  //       console.log('Your JWT was successfully validated!');
+  //     }
+  //     // Both should be the same
+  //     // console.log(signedjwt);
+  //     // console.log(payload);
+  //   });
+  // }
 };
