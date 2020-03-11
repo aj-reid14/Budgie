@@ -59,7 +59,7 @@ module.exports = {
   },
   login: function(req,res) {
     db.User.findOne(
-      {username: req.body.username},
+      {username: req.body.username.toLowerCase()},
       function (err, user) {
       if (err) return res.status(500).send('Error on the server.');
       if (!user) return res.status(404).send('No user found.');

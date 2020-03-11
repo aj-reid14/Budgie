@@ -29,15 +29,17 @@ class Login extends Component {
         API.login(this.state)
         .then(res =>
         {
+            console.log("hello there")
             console.log(res.data)
+            window.location.pathname = "/home";
         }
         )
         .catch(() =>
         {
             console.log("error found")
+            alert("incorrect username or password")
         })
 
-        window.location.pathname = "/home";
 
     };
 
