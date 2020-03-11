@@ -27,8 +27,25 @@ class Budget extends Component {
     }
 
     componentDidMount() {
+        this.checkForUser();
+    }
+
+    checkForUser = () => {
         API.getUser("testUser")
-        .then(res => console.log(res));
+        .then(res => {
+            console.log(res);
+
+            if (res.data) {
+                let createdBudgets = []
+                res.data.budgets.forEach(budget => {
+                    createdBudgets.push(budget);
+                });
+
+                this.setState({
+                    userBudgets: createdBudgets
+                })
+            }
+        });
     }
 
     addCategoryData = () => {
@@ -134,12 +151,20 @@ class Budget extends Component {
                         />)
         }
 
+        let budgetIcons = "";
+        this.state.userBudgets.forEach(budget => {
+            if (budgetIcons === "") {budgetIcons = <div className="user-bdgt"></div>;}
+            else {budgetIcons += <div className="user-bdgt"></div>}
+        });
+
 
         return (
 
             <Container>
                 
-                <Sidebar />
+                <Sidebar>
+                    {budgetIcons}
+                </Sidebar>
 
                 <NewBudgetModal>
                 <div className="modal-body">
