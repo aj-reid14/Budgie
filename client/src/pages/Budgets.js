@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import NewBudgetModal from "../components/NewBudgetModal";
 import PieChart from "../components/PieChart";
 import { Container, Row } from "../components/Grid";
+import API from "../utils/API";
 import "./Budget.css";
 
 let containerStyle = {
@@ -31,8 +32,8 @@ class Budget extends Component {
 
         newCategoryData.push(
             {
-                name: this.state.newCategoryName,
-                amount: this.state.newCategoryAmount
+                categoryName: this.state.newCategoryName,
+                categoryAmount: this.state.newCategoryAmount
             });
 
         newCategoryData.forEach(category => {
@@ -43,9 +44,9 @@ class Budget extends Component {
                             <button type="button" className="category-delete">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            {category.name}
+                            {category.categoryName}
                         </td>
-                        <td>${category.amount}</td>
+                        <td>${category.categoryAmount}</td>
                     </tr>
                 )
             )
@@ -82,12 +83,24 @@ class Budget extends Component {
 
         this.state.rawCategoryData.forEach(category => {
 
-            let amount = parseInt(category.amount);
+            let amount = parseInt(category.categoryAmount);
             
             dataPoints.push(
-                {label: category.name, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.amount}`}
+                {label: category.categoryName, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.categoryAmount}`}
             )
         })
+
+        API.createUser("testUser", {
+            username: "testUser",
+            password: "pkpkpkpk",
+            budgets: [{
+                budgetName: this.state.newBudgetName,
+                budgetTotal: this.state.newBudgetTotal,
+                categories: this.state.rawCategoryData
+            }]
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
 
         this.setState({
             budgetCreated: true,

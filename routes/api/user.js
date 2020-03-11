@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const userController = require("../../controllers/userController.js");
 
-// Matches with "/api/books"
 router.route("/")
   .get(userController.findAll)
   .post(userController.create);
@@ -15,7 +14,9 @@ router.route("/")
   router.route("/budget/:id")
   .get(userController.findById);
 
-// Matches with "/api/books/:id"
+  router.route("/:username")
+  .post(userController.create);
+
 router
 // .get(verifuyTokr, userController.findById)
 .route("/:id")
