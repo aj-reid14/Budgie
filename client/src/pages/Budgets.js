@@ -90,8 +90,8 @@ class Budget extends Component {
             )
         })
 
-        API.createUser("testUser", {
-            username: "testUser",
+        API.createUser("testUser1", {
+            username: "testUser1",
             password: "pkpkpkpk",
             budgets: [{
                 budgetName: this.state.newBudgetName,
@@ -192,7 +192,7 @@ class Budget extends Component {
                                                 id="btn-add-category"
                                                 type="button"
                                                 onClick={this.addCategoryData}
-                                                class="btn btn-primary">Add</button>
+                                                className="btn btn-primary">Add</button>
                                         </div>
                                         <Row>
                                             <table id="category-table" width="100%">
@@ -213,7 +213,7 @@ class Budget extends Component {
                                                 data-dismiss="modal"
                                                 onClick={this.createBudget}
                                                 disabled={!this.state.budgetVerified}
-                                                class="btn btn-success">Save</button>
+                                                className="btn btn-success">Save</button>
                                         </Row>
 
                                     </Container>
