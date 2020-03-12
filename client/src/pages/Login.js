@@ -31,6 +31,7 @@ class Login extends Component {
         .then(res =>
         {
             // console.log(res.data)
+            sessionStorage.setItem("username", res.data.username);
             window.location.pathname = `/home/${res.data.username}`;
         }
         )
@@ -53,14 +54,14 @@ class Login extends Component {
         .then(res =>
         {
             // console.log(res.data)
+            sessionStorage.setItem("username", res.data.username);
+            window.location.pathname = `/home/${res.data.username}`;
         }
         )
         .catch(() =>
         {
             console.log("error found")
         })
-
-        window.location.pathname = "/home";
     };
 
     render() {
