@@ -25,7 +25,11 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={Login} />
           <Route path="/home" component={Budget} />
+<<<<<<< HEAD
           <Route exact path="/budget/:id" component={Budget} />
+=======
+          <Route exact path="/logout" component={Login} />
+>>>>>>> 2ad211ac6e29dda0004b66d455e989103fdec519
         </Switch>
           </div>
       </div>

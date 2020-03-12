@@ -60,12 +60,13 @@ module.exports = {
           let token = jwt.sign({ id: user.id }, config.secret, {
             expiresIn: 86400
           });
-          res.status(200).send({ auth: true, token: token });
+          res.status(200).send({ auth: true, token: token, username:user.username });
         })
   },
   login: function(req,res) {
     db.User.findOne(
-      {username: req.body.username},
+      {username: req.body.username.toLowerCase()
+      },
       function (err, user) {
       if (err) return res.status(500).send('Error on the server.');
       if (!user) return res.status(404).send('No user found.');
@@ -77,7 +78,7 @@ module.exports = {
       var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
       });
-      res.status(200).send({ auth: true, token: token });
+      res.status(200).send({ auth: true, token: token, username:user.username });
     })
   },
   verify: function(req,res) {
