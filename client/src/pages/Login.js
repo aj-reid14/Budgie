@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Input, TextArea, FormBtn } from "../components/Form";
 import { Col, Row, Container } from "../components/Grid";
 import API from "../utils/API"
+import { compareSync } from "bcryptjs";
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
@@ -29,15 +30,14 @@ class Login extends Component {
         API.login(this.state)
         .then(res =>
         {
-            console.log("hello there")
-            console.log(res.data)
-            window.location.pathname = "/home";
+            // console.log(res.data)
+            window.location.pathname = `/home/${res.data.username}`;
         }
         )
         .catch(() =>
         {
             console.log("error found")
-            alert("incorrect username or password")
+            alert("Incorrect username or password")
         })
 
 
@@ -52,7 +52,7 @@ class Login extends Component {
         API.register(this.state)
         .then(res =>
         {
-            console.log(res.data)
+            // console.log(res.data)
         }
         )
         .catch(() =>
