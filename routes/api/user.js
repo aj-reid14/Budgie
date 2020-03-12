@@ -15,6 +15,7 @@ router.route("/")
   .get(userController.findById);
 
   router.route("/:username")
+  .get(userController.findByUsername)
   .post(userController.create);
 
 router
