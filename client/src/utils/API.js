@@ -18,5 +18,8 @@ export default {
   },
   createUser: function(username, data) {
     return axios.post("/api/home/" + username, data)
+  },
+  updateUser: function(username, data) {
+    return axios.put("/api/home/" + username, data)
   }
 };

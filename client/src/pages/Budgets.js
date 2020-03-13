@@ -15,15 +15,20 @@ class Budget extends Component {
 
     state = {
         newBudgetName: "",
+        currentBudget: "",
         newBudgetTotal: 0,
         newCategoryName: "",
         newCategoryAmount: 0,
-        rawCategoryData: [],
         tableContent: [],
         pieData: [],
         budgetVerified: false,
         budgetCreated: false,
-        userBudgets: []
+        userBudgets: [],
+        budget: {
+            budgetName: "",
+            budgetTotal: 0,
+            categories: []
+        }
     }
 
     componentDidMount() {
@@ -32,25 +37,25 @@ class Budget extends Component {
 
     checkForUser = () => {
         API.getUser("testUser")
-        .then(res => {
-            console.log(res);
+            .then(res => {
+                console.log(res);
 
-            if (res.data) {
-                let createdBudgets = []
-                res.data.budgets.forEach(budget => {
-                    createdBudgets.push(budget);
-                });
+                if (res.data) {
+                    let createdBudgets = []
+                    res.data.budgets.forEach(budget => {
+                        createdBudgets.push(budget);
+                    });
 
-                this.setState({
-                    userBudgets: createdBudgets
-                })
-            }
-        });
+                    this.setState({
+                        userBudgets: createdBudgets
+                    })
+                }
+            });
     }
 
     addCategoryData = () => {
 
-        let newCategoryData = this.state.rawCategoryData;
+        let newCategoryData = this.state.budget.categories;
         let content = [];
 
         newCategoryData.push(
@@ -76,7 +81,11 @@ class Budget extends Component {
         });
 
         this.setState({
-            rawCategoryData: newCategoryData,
+            budget: {
+                budgetName: this.state.budget.budgetName,
+                budgetTotal: this.state.budget.budgetTotal,
+                categories: newCategoryData
+            },
             tableContent: content,
             newCategoryName: "",
             newCategoryAmount: 0,
@@ -88,52 +97,80 @@ class Budget extends Component {
     handleInputChange = event => {
         const { name, value } = event.target;
 
-        this.setState({
-            [name]: value
-        });
-
-        if (name === ("newBudgetName" || "newBudgetTotal")) {
+        if (name === "budgetName") {
             this.setState({
+                budget: {
+                    budgetName: value,
+                    budgetTotal: this.state.budget.budgetTotal,
+                    categories: this.state.budget.categories
+                },
                 budgetVerified: this.verifyBudgetInfo()
+            });
+        } else if (name === "budgetTotal") {
+            this.setState({
+                budget: {
+                    budgetName: this.state.budget.budgetName,
+                    budgetTotal: value,
+                    categories: this.state.budget.categories
+                },
+                budgetVerified: this.verifyBudgetInfo()
+            });
+        } else {
+            this.setState({
+                [name]: value
             })
         }
     }
 
     createBudget = () => {
 
-        let dataPoints = [];
-        let budgetTotal = parseInt(this.state.newBudgetTotal);
-
-        this.state.rawCategoryData.forEach(category => {
-
-            let amount = parseInt(category.categoryAmount);
-            
-            dataPoints.push(
-                {label: category.categoryName, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.categoryAmount}`}
-            )
-        })
-
-        API.createUser("testUser", {
-            username: "testUser",
-            password: "pkpkpkpk",
-            budgets: [{
-                budgetName: this.state.newBudgetName,
-                budgetTotal: this.state.newBudgetTotal,
-                categories: this.state.rawCategoryData
-            }]
-        })
-        .then(res => console.log(res))
-        .catch(err => console.log(err));
-
+        let updatedBudgets = this.state.userBudgets;
+        updatedBudgets.push(this.state.budget);
+        console.log(updatedBudgets);
         this.setState({
-            budgetCreated: true,
-            pieData: dataPoints
-        })
+            userBudgets: updatedBudgets
+        });
+
+        // API.updateUser("testUser", this.state.budget)
+        //     .then(res => {
+        //         console.log(res);
+        //         this.setState({
+        //             userBudgets: updatedBudgets
+        //         })
+        //     })
+        //     .catch(err => console.log(err));
+
+        this.updatePieChart(this.state.newBudgetName);
+    }
+
+    updatePieChart = (budgetName) => {
+
+        alert(budgetName);
+
+        this.state.userBudgets.forEach(budget => {
+            if (budget.budgetName === budgetName) {
+                let dataPoints = [];
+                let budgetTotal = parseInt(budget.budgetTotal);
+                budget.categories.forEach(category => {
+                    let amount = parseInt(category.categoryAmount);
+                    dataPoints.push(
+                        { label: category.categoryName, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.categoryAmount}` }
+                    )
+                })
+
+                this.setState({
+                    currentBudget: budgetName,
+                    budgetCreated: true,
+                    pieData: dataPoints
+                })
+            }
+        });
+
     }
 
     verifyBudgetInfo = () => {
 
-        if ((this.state.rawCategoryData.length != 0) && (this.state.newBudgetTotal > 0) && this.state.newBudgetName != "") {
+        if ((this.state.budget.categories.length != 0) && (this.state.budget.budgetTotal > 0) && this.state.budget.budgetName != "") {
             return true;
         } else {
             return false;
@@ -145,111 +182,112 @@ class Budget extends Component {
         let pieChart = "";
 
         if (this.state.budgetCreated) {
-            pieChart = (<PieChart
-                            budgetName={this.state.newBudgetName}
-                            pieData={this.state.pieData}
-                        />)
+            pieChart = (<PieChart budgetName={this.state.currentBudget} pieData={this.state.pieData} />)
         }
 
-        let budgetIcons = "";
+        let budgetIcons = [];
         this.state.userBudgets.forEach(budget => {
-            if (budgetIcons === "") {budgetIcons = <div className="user-bdgt"></div>;}
-            else {budgetIcons += <div className="user-bdgt"></div>}
+            let newBudgetButton = (
+                <div>
+                    <div className="user-bdgt" budget-name={budget.budgetName} onClick={() => { this.updatePieChart(budget.budgetName) }}></div>
+                </div>
+            );
+            budgetIcons.push(newBudgetButton);
         });
 
 
         return (
 
             <Container>
-                
+
                 <Sidebar>
                     {budgetIcons}
                 </Sidebar>
 
                 <NewBudgetModal>
-                <div className="modal-body">
-                                <form>
-                                    <Container>
-                                        <div className="row modal-content-group">
-                                            <div className="form-group col-md-8">
-                                                <label htmlFor="budget-name" className="col-form-label">Budget Name</label>
-                                                <input
-                                                    id="budget-name"
-                                                    name="newBudgetName"
-                                                    onChange={this.handleInputChange}
-                                                    value={this.state.newBudgetName}
-                                                    type="text"
-                                                    placeholder="Ex: Lifestyle"
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                            <div className="form-group col-md-4">
-                                                <label htmlFor="budget-total" className="col-form-label">Total ($)</label>
-                                                <input
-                                                    id="budget-total"
-                                                    name="newBudgetTotal"
-                                                    onChange={this.handleInputChange}
-                                                    value={this.state.newBudgetTotal}
-                                                    type="text"
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="row modal-content-group">
-                                            <div className="form-group col-md-6">
-                                                <label htmlFor="category-name" className="col-form-label">Category Name</label>
-                                                <input
-                                                    id="category-name"
-                                                    name="newCategoryName"
-                                                    onChange={this.handleInputChange}
-                                                    value={this.state.newCategoryName}
-                                                    type="text"
-                                                    placeholder="Ex: Food"
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                            <div className="form-group col-md-3">
-                                                <label htmlFor="category-amount" className="col-form-label">Amount ($)</label>
-                                                <input
-                                                    id="category-amount"
-                                                    name="newCategoryAmount"
-                                                    onChange={this.handleInputChange}
-                                                    value={this.state.newCategoryAmount}
-                                                    type="text"
-                                                    className="form-control"
-                                                />
-                                            </div>
-                                            <button
-                                                id="btn-add-category"
-                                                type="button"
-                                                onClick={this.addCategoryData}
-                                                className="btn btn-primary">Add</button>
-                                        </div>
-                                        <Row>
-                                            <table id="category-table" width="100%">
-                                                <tbody>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Amount</th>
-                                                    </tr>
-                                                    {this.state.tableContent}
-                                                </tbody>
-                                            </table>
-                                        </Row>
+                    <div className="modal-body">
+                        <form>
+                            <Container>
+                                <div className="row modal-content-group">
+                                    <div className="form-group col-md-8">
+                                        <label htmlFor="budget-name" className="col-form-label">Budget Name</label>
+                                        <input
+                                            id="budget-name"
+                                            name="budgetName"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.budget.budgetName}
+                                            type="text"
+                                            placeholder="Ex: Lifestyle"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                    <div className="form-group col-md-4">
+                                        <label htmlFor="budget-total" className="col-form-label">Total ($)</label>
+                                        <input
+                                            id="budget-total"
+                                            name="budgetTotal"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.budget.budgetTotal}
+                                            type="text"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row modal-content-group">
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="category-name" className="col-form-label">Category Name</label>
+                                        <input
+                                            id="category-name"
+                                            name="newCategoryName"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.newCategoryName}
+                                            type="text"
+                                            placeholder="Ex: Food"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                    <div className="form-group col-md-3">
+                                        <label htmlFor="category-amount" className="col-form-label">Amount ($)</label>
+                                        <input
+                                            id="category-amount"
+                                            name="newCategoryAmount"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.newCategoryAmount}
+                                            type="text"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                    <button
+                                        id="btn-add-category"
+                                        type="button"
+                                        onClick={this.addCategoryData}
+                                        className="btn btn-primary">Add</button>
+                                </div>
+                                <Row>
+                                    <table id="category-table" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            {this.state.tableContent}
+                                        </tbody>
+                                    </table>
+                                </Row>
 
-                                        <Row>
-                                            <button
-                                                id="btn-save-budget"
-                                                type="button"
-                                                data-dismiss="modal"
-                                                onClick={this.createBudget}
-                                                disabled={!this.state.budgetVerified}
-                                                className="btn btn-success">Save</button>
-                                        </Row>
+                                <Row>
+                                    <button
+                                        id="btn-save-budget"
+                                        type="button"
+                                        data-dismiss="modal"
+                                        onClick={this.createBudget}
+                                        disabled={!this.state.budgetVerified}
+                                        className="btn btn-success">Save</button>
+                                </Row>
 
-                                    </Container>
-                                </form>
-                            </div>
+                            </Container>
+                        </form>
+                    </div>
                 </NewBudgetModal>
 
                 {pieChart}

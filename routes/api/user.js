@@ -16,7 +16,8 @@ router.route("/")
 
   router.route("/:username")
   .get(userController.findByUsername)
-  .post(userController.create);
+  .post(userController.create)
+  .put(userController.updateUser);
 
 router
 // .get(verifuyTokr, userController.findById)
