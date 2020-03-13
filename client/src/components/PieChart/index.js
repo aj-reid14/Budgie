@@ -15,7 +15,8 @@ class PieChart extends Component {
       title: {
         text: this.state.budgetName
       },
-      data: [{				
+      data: [{		
+        indexLabelPlacement: "inside",		
                 type: "pie",
                 dataPoints: this.state.pieData
                 // dataPoints: [

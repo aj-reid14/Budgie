@@ -7,6 +7,8 @@ const userSchema = new Schema({
     budgets: [{
         budgetName: {type: String, required: true},
         budgetTotal: {type: Number, min: 1, required: true},
+        transactionName: {type: String, required: true},
+        transactionAmount: {type: Number, min:1, required:true},
         categories: [{
             categoryName: {type: String, required: true},
             categoryAmount: {type: Number, min: 1, required: true}
