@@ -16,17 +16,20 @@ let containerStyle = {
 class Budget extends Component {
 
     state = {
-        newBudgetName: "",
-        newBudgetTotal: 0,
+        currentBudget: "",
         newCategoryName: "",
         newCategoryAmount: 0,
-        rawCategoryData: [],
         tableContent: [],
         pieData: [],
         budgetVerified: false,
         budgetCreated: false,
         userBudgets: [],
-        userTransactions: []
+        userTransactions: [],
+        budget: {
+            budgetName: "",
+            budgetTotal: 0,
+            categories: []
+        }
     }
 
     componentDidMount() {
@@ -34,27 +37,30 @@ class Budget extends Component {
     }
 
     checkForUser = () => {
-        API.getUser("testUser")
-            .then(res => {
-                console.log(res);
+        let user = sessionStorage.getItem("username");
+        if (!user) {
+            window.location.pathname = "";
+        } else {
+            API.getUser(user)
+                .then(res => {
+                    console.log(res);
+                    if (res.data) {
+                        let createdBudgets = []
+                        res.data.budgets.forEach(budget => {
+                            createdBudgets.push(budget);
+                        });
 
-                if (res.data) {
-                    let createdBudgets = []
-                    res.data.budgets.forEach(budget => {
-                        createdBudgets.push(budget);
-                    });
-
-                    this.setState({
-                        userBudgets: createdBudgets
-                    })
-                }
-            });
+                        this.setState({
+                            userBudgets: createdBudgets
+                        })
+                    }
+                });
+        }
     }
 
     addCategoryData = () => {
 
-        let newCategoryData = this.state.rawCategoryData;
-        let content = [];
+        let newCategoryData = this.state.budget.categories;
 
         newCategoryData.push(
             {
@@ -62,12 +68,29 @@ class Budget extends Component {
                 categoryAmount: this.state.newCategoryAmount
             });
 
-        newCategoryData.forEach(category => {
+            this.updateCategoryTable(newCategoryData);
+
+    }
+
+    removeCategory = name => {
+        let newCategoryData = this.state.budget.categories;
+
+        newCategoryData = newCategoryData.filter(category => category.categoryName != name);
+
+        this.updateCategoryTable(newCategoryData);
+
+    }
+
+    updateCategoryTable = (categoryData) => {
+
+        let content = [];
+
+        categoryData.forEach(category => {
             content.push(
                 (
                     <tr>
                         <td>
-                            <button type="button" className="category-delete">
+                            <button type="button" className="category-delete" onClick={() => this.removeCategory(category.categoryName)}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             {category.categoryName}
@@ -79,11 +102,15 @@ class Budget extends Component {
         });
 
         this.setState({
-            rawCategoryData: newCategoryData,
             tableContent: content,
             newCategoryName: "",
             newCategoryAmount: 0,
-            budgetVerified: this.verifyBudgetInfo()
+            budgetVerified: this.verifyBudgetInfo(),
+            budget: {
+                budgetName: this.state.budget.budgetName,
+                budgetTotal: this.state.budget.budgetTotal,
+                categories: categoryData
+            }
         });
 
     }
@@ -91,52 +118,78 @@ class Budget extends Component {
     handleInputChange = event => {
         const { name, value } = event.target;
 
-        this.setState({
-            [name]: value
-        });
-
-        if (name === ("newBudgetName" || "newBudgetTotal")) {
+        if (name === "budgetName") {
             this.setState({
+                budget: {
+                    budgetName: value,
+                    budgetTotal: this.state.budget.budgetTotal,
+                    categories: this.state.budget.categories
+                },
                 budgetVerified: this.verifyBudgetInfo()
+            });
+        } else if (name === "budgetTotal") {
+            this.setState({
+                budget: {
+                    budgetName: this.state.budget.budgetName,
+                    budgetTotal: value,
+                    categories: this.state.budget.categories
+                },
+                budgetVerified: this.verifyBudgetInfo()
+            });
+        } else {
+            this.setState({
+                [name]: value
             })
         }
     }
 
     createBudget = () => {
 
-        let dataPoints = [];
-        let budgetTotal = parseInt(this.state.newBudgetTotal);
+        let user = sessionStorage.getItem("username");
+        let updatedBudgets = this.state.userBudgets;
+        updatedBudgets.push(this.state.budget);
 
-        this.state.rawCategoryData.forEach(category => {
-
-            let amount = parseInt(category.categoryAmount);
-
-            dataPoints.push(
-                { label: category.categoryName, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.categoryAmount}` }
-            )
-        })
-
-        API.createUser("testUser", {
-            username: "testUser",
-            password: "pkpkpkpk",
-            budgets: [{
-                budgetName: this.state.newBudgetName,
-                budgetTotal: this.state.newBudgetTotal,
-                categories: this.state.rawCategoryData
-            }]
-        })
-            .then(res => console.log(res))
+        API.updateUser(user, this.state.budget)
+            .then(res => {
+                this.setState({
+                    userBudgets: updatedBudgets
+                })
+            })
             .catch(err => console.log(err));
+        this.updatePieChart(this.state.budget.name);
+    }
 
-        this.setState({
-            budgetCreated: true,
-            pieData: dataPoints
-        })
+    updatePieChart = (budgetName) => {
+
+        this.state.userBudgets.forEach(budget => {
+            if (budgetName === budget.budgetName) {
+                let dataPoints = [];
+                let budgetTotal = parseInt(budget.budgetTotal);
+                budget.categories.forEach(category => {
+                    let amount = parseInt(category.categoryAmount);
+                    dataPoints.push(
+                        { label: category.categoryName, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.categoryAmount}` }
+                    )
+                })
+
+                this.setState({
+                    currentBudget: budgetName,
+                    budgetCreated: true,
+                    pieData: dataPoints,
+                    tableContent: [],
+                    budget: {
+                        budgetName: "",
+                        budgetTotal: 0,
+                        categories: []
+                    }
+                });
+            }
+        });
     }
 
     verifyBudgetInfo = () => {
 
-        if ((this.state.rawCategoryData.length != 0) && (this.state.newBudgetTotal > 0) && this.state.newBudgetName != "") {
+        if ((this.state.budget.categories.length != 0) && (this.state.budget.budgetTotal > 0) && this.state.budget.budgetName != "") {
             return true;
         } else {
             return false;
@@ -148,23 +201,17 @@ class Budget extends Component {
         let pieChart = "";
 
         if (this.state.budgetCreated) {
-            pieChart = (<PieChart
-                budgetName={this.state.newBudgetName}
-                pieData={this.state.pieData}
-            />)
+            pieChart = (<PieChart budgetName={this.state.currentBudget} pieData={this.state.pieData} />)
         }
 
-        let budgetIcons = "";
+        let budgetIcons = [];
         this.state.userBudgets.forEach(budget => {
-            if (budgetIcons === "") { budgetIcons = <div className="user-bdgt"></div>; }
-            else { budgetIcons += <div className="user-bdgt"></div> }
-        });
-
-        let purchases = "";
-
-        this.state.userBudgets.forEach(budget => {
-            if (purchases === "") { purchases = <div className="user-bdgt"></div>; }
-            else { purchases += <div className="user-transaction"></div> }
+            let newBudgetButton = (
+                <div className="user-bdgt" onClick={() => { this.updatePieChart(budget.budgetName) }}>
+                    <div budget-name={budget.budgetName}></div>
+                </div>
+            );
+            budgetIcons.push(newBudgetButton);
         });
 
 
@@ -193,9 +240,9 @@ class Budget extends Component {
                                         <label htmlFor="budget-name" className="col-form-label">Budget Name</label>
                                         <input
                                             id="budget-name"
-                                            name="newBudgetName"
+                                            name="budgetName"
                                             onChange={this.handleInputChange}
-                                            value={this.state.newBudgetName}
+                                            value={this.state.budget.budgetName}
                                             type="text"
                                             placeholder="Ex: Lifestyle"
                                             className="form-control"
@@ -205,10 +252,10 @@ class Budget extends Component {
                                         <label htmlFor="budget-total" className="col-form-label">Total ($)</label>
                                         <input
                                             id="budget-total"
-                                            name="newBudgetTotal"
+                                            name="budgetTotal"
                                             onChange={this.handleInputChange}
-                                            value={this.state.newBudgetTotal}
-                                            type="text"
+                                            value={this.state.budget.budgetTotal}
+                                            type="number" min="1"
                                             className="form-control"
                                         />
                                     </div>
@@ -233,7 +280,7 @@ class Budget extends Component {
                                             name="newCategoryAmount"
                                             onChange={this.handleInputChange}
                                             value={this.state.newCategoryAmount}
-                                            type="text"
+                                            type="number" min="1"
                                             className="form-control"
                                         />
                                     </div>
@@ -241,6 +288,7 @@ class Budget extends Component {
                                         id="btn-add-category"
                                         type="button"
                                         onClick={this.addCategoryData}
+                                        disabled={((this.state.newCategoryAmount <= 0) || !this.state.newCategoryName)}
                                         className="btn btn-primary">Add</button>
                                 </div>
                                 <Row>
