@@ -5,6 +5,8 @@ import PieChart from "../components/PieChart";
 import { Container, Row } from "../components/Grid";
 import API from "../utils/API";
 import "./Budget.css";
+import Transactions from "../components/Transaction";
+import newTransactionModal from "../components/Transaction";
 
 let containerStyle = {
     "background-color": "red",
@@ -22,6 +24,7 @@ class Budget extends Component {
         budgetVerified: false,
         budgetCreated: false,
         userBudgets: [],
+        userTransactions: [],
         budget: {
             budgetName: "",
             budgetTotal: 0,
@@ -153,7 +156,6 @@ class Budget extends Component {
                 })
             })
             .catch(err => console.log(err));
-
         this.updatePieChart(this.state.budget.name);
     }
 
@@ -180,10 +182,9 @@ class Budget extends Component {
                         budgetTotal: 0,
                         categories: []
                     }
-                })
+                });
             }
         });
-
     }
 
     verifyBudgetInfo = () => {
@@ -221,6 +222,14 @@ class Budget extends Component {
                 <Sidebar>
                     {budgetIcons}
                 </Sidebar>
+
+
+
+
+
+
+
+                
 
                 <NewBudgetModal>
                     <div className="modal-body">
@@ -310,6 +319,77 @@ class Budget extends Component {
                 </NewBudgetModal>
 
                 {pieChart}
+
+                <Transactions>
+
+                    {purchases}
+
+                </Transactions>
+
+                <newTransactionModal>
+
+                    <div className="modal-body">
+                        <form>
+                            <Container>
+                                <div className="row modal-content-group col-mid-2">
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Dropdown button
+  </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">Somehow have catagories of current budget here</a>
+                                            <a class="dropdown-item" href="#">and here</a>
+                                            <a class="dropdown-item" href="#">and here too</a>
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-md-4">
+                                        <label htmlFor="transction-name" className="col-form-label">Transaction Name</label>
+                                        <input
+                                            id="transaction-name"
+                                            name="newTransactionName"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.newTransactionName}
+                                            type="text"
+                                            placeholder="Ex: restaurant bill"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                    <div className="form-group col-md-4">
+                                        <label htmlFor="transaction-amount" className="col-form-label">Amount Spent ($)</label>
+                                        <input
+                                            id="transaction-amount"
+                                            name="newTransactionAmount"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.newTransactionAmount}
+                                            type="text"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                    <button className="form-group col-md-4"
+                                        id="btn-save-transaction"
+                                        type="button"
+                                        data-dismiss="modal"
+                                        onClick={this.createBudget}
+                                        className="btn btn-success">Add latest transaction</button>
+
+
+
+
+
+                                </div>
+
+
+
+
+
+                            </Container>
+                        </form>
+                    </div>
+
+                </newTransactionModal>
+
+
 
             </Container>
 

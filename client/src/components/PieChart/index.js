@@ -10,6 +10,7 @@ function PieChart(props) {
       text: props.budgetName
     },
     data: [{
+      indexLabelPlacement: "inside",
       type: "pie",
       dataPoints: props.pieData
     }]}
@@ -21,7 +22,6 @@ function PieChart(props) {
     />
   </div>
   )
-
   }
 
   export default PieChart;
