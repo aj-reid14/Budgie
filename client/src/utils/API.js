@@ -14,7 +14,7 @@ export default {
     return axios.post("/api/home/:id", data)
   },
   getUser: function(username) {
-    return axios.get("api/home/" + username)
+    return axios.get("/api/home/" + username)
   },
   createUser: function(username, data) {
     return axios.post("/api/home/" + username, data)

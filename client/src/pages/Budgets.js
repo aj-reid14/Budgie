@@ -40,6 +40,7 @@ class Budget extends Component {
         } else {
             API.getUser(user)
                 .then(res => {
+                    console.log(res);
                     if (res.data) {
                         let createdBudgets = []
                         res.data.budgets.forEach(budget => {
@@ -57,7 +58,6 @@ class Budget extends Component {
     addCategoryData = () => {
 
         let newCategoryData = this.state.budget.categories;
-        let content = [];
 
         newCategoryData.push(
             {
@@ -65,12 +65,29 @@ class Budget extends Component {
                 categoryAmount: this.state.newCategoryAmount
             });
 
-        newCategoryData.forEach(category => {
+            this.updateCategoryTable(newCategoryData);
+
+    }
+
+    removeCategory = name => {
+        let newCategoryData = this.state.budget.categories;
+
+        newCategoryData = newCategoryData.filter(category => category.categoryName != name);
+
+        this.updateCategoryTable(newCategoryData);
+
+    }
+
+    updateCategoryTable = (categoryData) => {
+
+        let content = [];
+
+        categoryData.forEach(category => {
             content.push(
                 (
                     <tr>
                         <td>
-                            <button type="button" className="category-delete">
+                            <button type="button" className="category-delete" onClick={() => this.removeCategory(category.categoryName)}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             {category.categoryName}
@@ -82,15 +99,15 @@ class Budget extends Component {
         });
 
         this.setState({
-            budget: {
-                budgetName: this.state.budget.budgetName,
-                budgetTotal: this.state.budget.budgetTotal,
-                categories: newCategoryData
-            },
             tableContent: content,
             newCategoryName: "",
             newCategoryAmount: 0,
-            budgetVerified: this.verifyBudgetInfo()
+            budgetVerified: this.verifyBudgetInfo(),
+            budget: {
+                budgetName: this.state.budget.budgetName,
+                budgetTotal: this.state.budget.budgetTotal,
+                categories: categoryData
+            }
         });
 
     }
@@ -156,7 +173,13 @@ class Budget extends Component {
                 this.setState({
                     currentBudget: budgetName,
                     budgetCreated: true,
-                    pieData: dataPoints
+                    pieData: dataPoints,
+                    tableContent: [],
+                    budget: {
+                        budgetName: "",
+                        budgetTotal: 0,
+                        categories: []
+                    }
                 })
             }
         });
@@ -256,7 +279,7 @@ class Budget extends Component {
                                         id="btn-add-category"
                                         type="button"
                                         onClick={this.addCategoryData}
-                                        disabled={(this.state.newCategoryAmount < 1) && !this.state.newCategoryName}
+                                        disabled={((this.state.newCategoryAmount <= 0) || !this.state.newCategoryName)}
                                         className="btn btn-primary">Add</button>
                                 </div>
                                 <Row>
