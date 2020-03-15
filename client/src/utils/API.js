@@ -19,7 +19,10 @@ export default {
   createUser: function(username, data) {
     return axios.post("/api/home/" + username, data)
   },
-  updateUser: function(username, data) {
+  addBudget: function(username, data) {
     return axios.put("/api/home/" + username, data)
+  },
+  addTransaction: function(username, budgetName) {
+    return axios.get(`/api/home/${username}/${budgetName}`)
   }
 };

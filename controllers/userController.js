@@ -20,11 +20,19 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => status(422).json(err));
   },
-  updateUser: function(req, res) {
+  addBudget: function(req, res) {
     db.User
       .findOneAndUpdate(
         {username: req.params.username}, 
         {$addToSet: {budgets: req.body}})
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
+  addTransaction: function(req, res) {
+    db.User
+      .findOne(
+        {username: req.params.username,
+        "budgets.budgetName": req.params.budgetName })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },

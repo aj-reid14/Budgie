@@ -159,6 +159,20 @@ class Budget extends Component {
         this.updatePieChart(this.state.budget.name);
     }
 
+    addTransaction = (budgetName) => {
+        let user = sessionStorage.getItem("username");
+
+        if (!user) {
+            window.location.pathname = "";
+        } else {
+            API.addTransaction(user, this.state.currentBudget)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => console.log(err));
+        }
+    }
+
     updatePieChart = (budgetName) => {
 
         this.state.userBudgets.forEach(budget => {
@@ -320,12 +334,6 @@ class Budget extends Component {
 
                 {pieChart}
 
-                <Transactions>
-
-                    {purchases}
-
-                </Transactions>
-
                 <newTransactionModal>
 
                     <div className="modal-body">
@@ -370,7 +378,7 @@ class Budget extends Component {
                                         id="btn-save-transaction"
                                         type="button"
                                         data-dismiss="modal"
-                                        onClick={this.createBudget}
+                                        onClick={this.addTransaction}
                                         className="btn btn-success">Add latest transaction</button>
 
 
