@@ -24,6 +24,8 @@ class Budget extends Component {
         budgetVerified: false,
         budgetCreated: false,
         userBudgets: [],
+        transactionName: "",
+        transactionAmount: 0,
         userTransactions: [],
         budget: {
             budgetName: "",
@@ -149,7 +151,7 @@ class Budget extends Component {
         let updatedBudgets = this.state.userBudgets;
         updatedBudgets.push(this.state.budget);
 
-        API.updateUser(user, this.state.budget)
+        API.addBudget(user, this.state.budget)
             .then(res => {
                 this.setState({
                     userBudgets: updatedBudgets
@@ -165,7 +167,12 @@ class Budget extends Component {
         if (!user) {
             window.location.pathname = "";
         } else {
-            API.addTransaction(user, this.state.currentBudget)
+            let newTransaction = {
+                transactionName: this.state.transactionName,
+                transactionAmount: this.state.transactionAmount
+            };
+
+            API.addTransaction(user, this.state.currentBudget, newTransaction)
             .then(res => {
                 console.log(res);
             })
@@ -235,15 +242,7 @@ class Budget extends Component {
 
                 <Sidebar>
                     {budgetIcons}
-                </Sidebar>
-
-
-
-
-
-
-
-                
+                </Sidebar>                
 
                 <NewBudgetModal>
                     <div className="modal-body">
@@ -355,9 +354,9 @@ class Budget extends Component {
                                         <label htmlFor="transction-name" className="col-form-label">Transaction Name</label>
                                         <input
                                             id="transaction-name"
-                                            name="newTransactionName"
+                                            name="transactionName"
                                             onChange={this.handleInputChange}
-                                            value={this.state.newTransactionName}
+                                            value={this.state.transactionName}
                                             type="text"
                                             placeholder="Ex: restaurant bill"
                                             className="form-control"
@@ -367,10 +366,10 @@ class Budget extends Component {
                                         <label htmlFor="transaction-amount" className="col-form-label">Amount Spent ($)</label>
                                         <input
                                             id="transaction-amount"
-                                            name="newTransactionAmount"
+                                            name="transactionAmount"
                                             onChange={this.handleInputChange}
-                                            value={this.state.newTransactionAmount}
-                                            type="text"
+                                            value={this.state.transactionAmount}
+                                            type="number"
                                             className="form-control"
                                         />
                                     </div>
