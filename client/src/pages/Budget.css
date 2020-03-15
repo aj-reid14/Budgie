@@ -9,3 +9,13 @@ h1 {
 h3 {
     text-align: center;
 }
+#btn-new-transaction{
+
+    width: 100%;
+
+}
+
+
+#btn-save-transaction{
+    margin: auto;
+}
