@@ -38,10 +38,12 @@
     border: 2px solid black;
     border-color: black;
     border-radius: 17.25px;
+    user-select: none;
 }
 
 #create-budget:hover, .user-bdgt:hover {
     border-color: white;
+    color: white;
 }
 
 /* width */

@@ -16,7 +16,11 @@ router.route("/")
 
   router.route("/:username")
   .get(userController.findByUsername)
-  .post(userController.create);
+  .post(userController.create)
+  .put(userController.addBudget);
+
+  router.route("/:username/:budgetName")
+  .put(userController.addTransaction);
 
 router
 // .get(verifuyTokr, userController.findById)
