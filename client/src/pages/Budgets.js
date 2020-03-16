@@ -23,14 +23,13 @@ class Budget extends Component {
         pieData: [],
         budgetVerified: false,
         budgetCreated: false,
+        budgetUsed: 0,
         userBudgets: [],
         newTransaction: {
             name: "",
             amount: 0,
             category: ""
         },
-        transactionName: "",
-        transactionAmount: 0,
         transactionCategories: "",
         userTransactions: [],
         budget: {
@@ -76,22 +75,30 @@ class Budget extends Component {
                 categoryAmount: this.state.newCategoryAmount
             });
 
-        this.updateCategoryTable(newCategoryData);
+        this.updateCategoryTable(newCategoryData, {op: "+", amount: this.state.newCategoryAmount});
 
     }
 
     removeCategory = name => {
         let newCategoryData = this.state.budget.categories;
+        let removeAmount = newCategoryData.filter(category => category.categoryName === name)[0].categoryAmount;
 
         newCategoryData = newCategoryData.filter(category => category.categoryName != name);
 
-        this.updateCategoryTable(newCategoryData);
+        this.updateCategoryTable(newCategoryData, {op: "-", amount: removeAmount});
 
     }
 
-    updateCategoryTable = (categoryData) => {
+    updateCategoryTable = (categoryData, operation) => {
 
         let content = [];
+        let amount = operation.amount;
+
+        if (operation.op === "-") {
+            amount *= -1;
+        };
+
+        let budgetRemaining = parseInt(this.state.budgetUsed) + parseInt(amount);
 
         categoryData.forEach(category => {
             content.push(
@@ -114,6 +121,7 @@ class Budget extends Component {
             newCategoryName: "",
             newCategoryAmount: 0,
             budgetVerified: this.verifyBudgetInfo(),
+            budgetUsed: budgetRemaining,
             budget: {
                 budgetName: this.state.budget.budgetName,
                 budgetTotal: this.state.budget.budgetTotal,
@@ -292,7 +300,7 @@ class Budget extends Component {
                         <form>
                             <Container>
                                 <div className="row modal-content-group">
-                                    <div className="form-group col-md-8">
+                                    <div className="form-group col-md-6">
                                         <label htmlFor="budget-name" className="col-form-label">Budget Name</label>
                                         <input
                                             id="budget-name"
@@ -304,7 +312,7 @@ class Budget extends Component {
                                             className="form-control"
                                         />
                                     </div>
-                                    <div className="form-group col-md-4">
+                                    <div className="form-group col-md-3">
                                         <label htmlFor="budget-total" className="col-form-label">Total ($)</label>
                                         <input
                                             id="budget-total"
@@ -312,6 +320,17 @@ class Budget extends Component {
                                             onChange={this.handleInputChange}
                                             value={this.state.budget.budgetTotal}
                                             type="number" min="1"
+                                            className="form-control"
+                                        />
+                                    </div>
+                                    <div className="form-group col-md-3">
+                                        <label htmlFor="budget-remaining" className="col-form-label">Remaining</label>
+                                        <input
+                                            id="budget-remaining"
+                                            name="budgetRemaining"
+                                            disabled={true}
+                                            value={this.state.budget.budgetTotal - this.state.budgetUsed}
+                                            type="number"
                                             className="form-control"
                                         />
                                     </div>

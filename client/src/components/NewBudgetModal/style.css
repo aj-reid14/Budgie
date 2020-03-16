@@ -3,6 +3,16 @@
     border-width: 1px 0;
 }
 
+#budget-total {
+    color: rgb(7, 82, 7);
+    text-align: center;
+}
+
+#budget-remaining {
+    color: rgb(94, 1, 1);
+    text-align: center;
+}
+
 #btn-add-category {
     height: 100%;
     margin: auto;
