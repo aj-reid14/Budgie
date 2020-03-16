@@ -354,7 +354,7 @@ class Budget extends Component {
                                         type="button"                            
                                         onClick={this.deleteBudget}
                                         className="btn btn-success">
-                                            elete this budget</button>
+                                            Delete this budget</button>
 
                 {pieChart}
 

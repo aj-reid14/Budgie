@@ -30,7 +30,7 @@ module.exports = {
   },
   deleteBudget: function (req, res) {
     db.User
-      .findOneAndDelete(
+      .findOneAndUpdate(
         { username: req.params.username },
         { $pull: { budgets: { budgetName: req.params.budgetName } } })
       .then(dbModel => res.json(dbModel))
