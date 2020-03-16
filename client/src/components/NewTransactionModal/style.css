@@ -2,6 +2,15 @@
     margin: auto;
 }
 
-button {
-    margin: auto;
+#category-list {
+    margin-bottom: 10px;
+}
+
+#btn-save-transaction {
+    margin-top: 10px;
+}
+
+.modal-body.btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
