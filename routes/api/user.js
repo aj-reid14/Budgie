@@ -20,7 +20,7 @@ router.route("/")
   .put(userController.addBudget);
 
   router.route("/:username/:budgetName")
-  .get(userController.addTransaction);
+  .put(userController.addTransaction);
 
 router
 // .get(verifuyTokr, userController.findById)

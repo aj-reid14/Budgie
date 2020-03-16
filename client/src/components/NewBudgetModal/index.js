@@ -14,16 +14,6 @@ class NewBudgetModal extends Component {
         tableContent: []
     }
 
-    onSave = (event) => {
-        if (typeof this.props.budgetData !== "undefined") {
-            this.props.budgetData(event.target.value);            
-        }
-    }
-
-    createNewBudget = () => {
-
-    }
-
     render() {
         return (
             <div>

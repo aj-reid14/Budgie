@@ -6,7 +6,7 @@ import { Container, Row } from "../components/Grid";
 import API from "../utils/API";
 import "./Budget.css";
 import Transactions from "../components/Transaction";
-import newTransactionModal from "../components/Transaction";
+import NewTransactionModal from "../components/NewTransactionModal";
 
 let containerStyle = {
     "background-color": "red",
@@ -333,88 +333,67 @@ class Budget extends Component {
 
                 {pieChart}
 
-                <button type="button" className="form-group col-md-4" data-toggle="modal" data-target="#newTransactionModal"
+                <button type="button" className="form-group col-md-4" data-toggle="modal" data-target="#new-transaction-modal"
                     id="btn-new-transaction"
                     type="button"
                     data-dismiss="modal"
                     className="btn btn-success">Add latest transaction</button>
 
+                <NewTransactionModal>
+                    <div className="modal-body">
+                        <form>
+                            <Container>
+                                    <div className="row modal-content-group">
+
+                                        <div className="dropdown">
+                                            <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Category
+                                                </button>
+                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a className="dropdown-item" href="#">Somehow have catagories of current budget here</a>
+                                                <a className="dropdown-item" href="#">and here</a>
+                                                <a className="dropdown-item" href="#">and here too</a>
+                                            </div>
 
 
+                                            <div className="form-group col-md-12">
+                                                <label htmlFor="transction-name" className="col-form-label">Transaction Name</label>
+                                                <input
+                                                    id="transaction-name"
+                                                    name="transactionName"
+                                                    onChange={this.handleInputChange}
+                                                    value={this.state.transactionName}
+                                                    type="text"
+                                                    placeholder="Ex: restaurant bill"
+                                                    className="form-control"
+                                                />
+                                            </div>
 
-                <newTransactionModal><div>
-                <div id="newTransactionModal" className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <form>
-                    <Container>
-                    <div className="modal-dialog modal-lg" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">New Transaction</h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
 
-                            <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Category
-  </button>
-                                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Somehow have catagories of current budget here</a>
-                                            <a class="dropdown-item" href="#">and here</a>
-                                            <a class="dropdown-item" href="#">and here too</a>
+                                            <div className="form-group col-md-12">
+                                                <label htmlFor="transaction-amount" className="col-form-label">Amount Spent ($)</label>
+                                                <input
+                                                    id="transaction-amount"
+                                                    name="transactionAmount"
+                                                    onChange={this.handleInputChange}
+                                                    value={this.state.transactionAmount}
+                                                    type="number"
+                                                    className="form-control"
+                                                />
+                                            </div>
+                                            <button className="form-group col-md-4"
+                                                id="btn-save-transaction"
+                                                type="button"
+                                                data-dismiss="modal"
+                                                onClick={this.addTransaction}
+                                                className="btn btn-success">Save Transaction</button>
                                         </div>
-
-
-                                        <div className="form-group col-md-12">
-                                        <label htmlFor="transction-name" className="col-form-label">Transaction Name</label>
-                                        <input
-                                            id="transaction-name"
-                                            name="transactionName"
-                                            onChange={this.handleInputChange}
-                                            value={this.state.transactionName}
-                                            type="text"
-                                            placeholder="Ex: restaurant bill"
-                                            className="form-control"
-                                        />
                                     </div>
-
-
-                                    <div className="form-group col-md-12">
-                                        <label htmlFor="transaction-amount" className="col-form-label">Amount Spent ($)</label>
-                                        <input
-                                            id="transaction-amount"
-                                            name="transactionAmount"
-                                            onChange={this.handleInputChange}
-                                            value={this.state.transactionAmount}
-                                            type="number"
-                                            className="form-control"
-                                        />
-                                    </div>
-                                    <button className="form-group col-md-4"
-                                        id="btn-save-transaction"
-                                        type="button"
-                                        data-dismiss="modal"
-                                        onClick={this.addTransaction}
-                                        className="btn btn-success">Save Transaction</button>
-                                    </div>
-
-
-
-
-
-                            {this.props.children}
-                        </div>
+                            </Container>
+                        </form>
                     </div>
-                    </Container>
-                    </form>
-                </div>
-                
-            </div>
 
-                </newTransactionModal>
-
-
+                </NewTransactionModal>
 
             </Container>
 
