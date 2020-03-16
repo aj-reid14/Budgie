@@ -26,6 +26,7 @@ class Budget extends Component {
         userBudgets: [],
         transactionName: "",
         transactionAmount: 0,
+        transactiontotal:0,
         userTransactions: [],
         budget: {
             budgetName: "",
@@ -169,9 +170,9 @@ class Budget extends Component {
         } else {
             let newTransaction = {
                 transactionName: this.state.transactionName,
-                transactionAmount: this.state.transactionAmount
+                transactionAmount: this.state.transactionAmount,
             };
-
+            this.setState({userTransactions: this.state.transactionAmount})
             API.addTransaction(user, this.state.currentBudget, newTransaction)
             .then(res => {
                 console.log(res);
@@ -217,6 +218,14 @@ class Budget extends Component {
         }
     }
 
+    sum = () => {
+        
+        for (let i = 0; i < this.state.userTransactions.length; i++) {
+            let sum= 0
+            sum+=this.state.userTransactions
+        }
+    }
+
     render() {
 
         let pieChart = "";
@@ -234,6 +243,7 @@ class Budget extends Component {
             );
             budgetIcons.push(newBudgetButton);
         });
+        
 
 
         return (
@@ -377,7 +387,7 @@ class Budget extends Component {
                                         id="btn-save-transaction"
                                         type="button"
                                         data-dismiss="modal"
-                                        onClick={this.addTransaction}
+                                        onClick={this.addTransaction, this.sum}
                                         className="btn btn-success">Add latest transaction</button>
 
 
