@@ -24,5 +24,8 @@ export default {
   },
   addTransaction: function(username, budgetName) {
     return axios.get(`/api/home/${username}/${budgetName}`)
-  }
+  },
+  deleteBudget: function(username, budgetName) {
+    return axios.delete(`/api/home/${username}/${budgetName}`)
+  },
 };
