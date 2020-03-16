@@ -70,7 +70,7 @@ class Budget extends Component {
                 categoryAmount: this.state.newCategoryAmount
             });
 
-            this.updateCategoryTable(newCategoryData);
+        this.updateCategoryTable(newCategoryData);
 
     }
 
@@ -243,7 +243,7 @@ class Budget extends Component {
                 <Sidebar>
                     {budgetIcons}
                 </Sidebar>                
-
+          
                 <NewBudgetModal>
                     <div className="modal-body">
                         <form>
@@ -333,24 +333,40 @@ class Budget extends Component {
 
                 {pieChart}
 
-                <newTransactionModal>
+                <button type="button" className="form-group col-md-4" data-toggle="modal" data-target="#newTransactionModal"
+                    id="btn-new-transaction"
+                    type="button"
+                    data-dismiss="modal"
+                    className="btn btn-success">Add latest transaction</button>
 
-                    <div className="modal-body">
-                        <form>
-                            <Container>
-                                <div className="row modal-content-group col-mid-2">
 
-                                    <div class="dropdown">
+
+
+                <newTransactionModal><div>
+                <div id="newTransactionModal" className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <form>
+                    <Container>
+                    <div className="modal-dialog modal-lg" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">New Transaction</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="dropdown">
                                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Dropdown button
+                                            Category
   </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="#">Somehow have catagories of current budget here</a>
                                             <a class="dropdown-item" href="#">and here</a>
                                             <a class="dropdown-item" href="#">and here too</a>
                                         </div>
-                                    </div>
-                                    <div className="form-group col-md-4">
+
+
+                                        <div className="form-group col-md-12">
                                         <label htmlFor="transction-name" className="col-form-label">Transaction Name</label>
                                         <input
                                             id="transaction-name"
@@ -362,7 +378,9 @@ class Budget extends Component {
                                             className="form-control"
                                         />
                                     </div>
-                                    <div className="form-group col-md-4">
+
+
+                                    <div className="form-group col-md-12">
                                         <label htmlFor="transaction-amount" className="col-form-label">Amount Spent ($)</label>
                                         <input
                                             id="transaction-amount"
@@ -378,21 +396,21 @@ class Budget extends Component {
                                         type="button"
                                         data-dismiss="modal"
                                         onClick={this.addTransaction}
-                                        className="btn btn-success">Add latest transaction</button>
+                                        className="btn btn-success">Save Transaction</button>
+                                    </div>
 
 
 
 
 
-                                </div>
-
-
-
-
-
-                            </Container>
-                        </form>
+                            {this.props.children}
+                        </div>
                     </div>
+                    </Container>
+                    </form>
+                </div>
+                
+            </div>
 
                 </newTransactionModal>
 
