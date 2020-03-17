@@ -20,9 +20,9 @@ router.route("/")
   .put(userController.addBudget);
 
   router.route("/:username/:budgetName")
-  .get(userController.addTransaction)
+  .put(userController.addTransaction)
   .delete(userController.deleteBudget);
-  
+
 router
 // .get(verifuyTokr, userController.findById)
 .route("/:id")

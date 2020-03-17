@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { Input } from "../Form";
 import "./style.css";
-import { Container, Row } from "../Grid";
 
-class NewTranactionModal extends Component {
+class NewTransactionModal extends Component {
 
     state = {
         newTransactionName: "",
@@ -11,16 +9,6 @@ class NewTranactionModal extends Component {
         //The response would populate the dropdown arrow to choose from
         Category: "",
         
-    }
-
-    onSave = (event) => {
-        if (typeof this.props.budgetData !== "undefined") {
-            this.props.budgetData(event.target.value);            
-        }
-    }
-
-    createNewBudget = () => {
-
     }
 
     render() {
@@ -31,7 +19,7 @@ class NewTranactionModal extends Component {
                         <div className="modal-content">
 
                             <div className="modal-header">
-                                <h5 className="modal-title">Create New Budget</h5>
+                                <h5 className="modal-title">New Transaction</h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -47,4 +35,4 @@ class NewTranactionModal extends Component {
     }
 }
 
-export default NewTranactionModal;
+export default NewTransactionModal;

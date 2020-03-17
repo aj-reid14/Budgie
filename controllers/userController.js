@@ -38,11 +38,10 @@ module.exports = {
   },
   addTransaction: function (req, res) {
     db.User
-      .findOne(
-        {
-          username: req.params.username,
-          "budgets.budgetName": req.params.budgetName
-        })
+      .findOneAndUpdate(
+        {username: req.params.username},
+        {$addToSet: {"budgets.$[budget].transactions": req.body}},
+        {arrayFilters: [{"budget.budgetName": req.params.budgetName}]})
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
