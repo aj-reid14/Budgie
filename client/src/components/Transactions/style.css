@@ -1,7 +1,16 @@
 #transactions {
     margin: auto;
+    width: 100%;
+    text-align: center;
 }
 
 .transaction-item {
+    width: 75%;
+    margin: auto;
     border: 1px solid black;
+}
+
+#btn-new-transaction {
+    width: 75%;
+    
 }

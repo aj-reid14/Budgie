@@ -17,6 +17,7 @@ class Budget extends Component {
 
     state = {
         currentBudget: "",
+        budgetPreview: "Select a Budget",
         newCategoryName: "",
         newCategoryAmount: 0,
         tableContent: [],
@@ -224,6 +225,12 @@ class Budget extends Component {
         this.updatePieChart(this.state.budget.name);
     }
 
+    updateBudgetPreview = (text) => {
+        this.setState({
+            budgetPreview: text
+        });
+    }
+
     addTransaction = () => {
         let user = sessionStorage.getItem("username");
 
@@ -328,7 +335,11 @@ class Budget extends Component {
         let budgetIcons = [];
         this.state.userBudgets.forEach(budget => {
             let newBudgetButton = (
-                <div className="user-bdgt" onClick={() => { this.updatePieChart(budget.budgetName) }}>
+                <div
+                className="user-bdgt"
+                onMouseEnter={() => {this.updateBudgetPreview(budget.budgetName)}}
+                onMouseLeave={() => {this.updateBudgetPreview("Select a Budget")}}
+                onClick={() => { this.updatePieChart(budget.budgetName) }}>
                     <div budget-name={budget.budgetName}></div>
                 </div>
             );
@@ -340,7 +351,7 @@ class Budget extends Component {
 
             <Container>
 
-                <Sidebar>
+                <Sidebar budgetPreview={this.state.budgetPreview}>
                     {budgetIcons}
                 </Sidebar>
 
@@ -444,17 +455,7 @@ class Budget extends Component {
 
                 {pieChart}
 
-                <button
-                    id="btn-new-transaction"
-                    className="btn btn-success col-md-12"
-                    type="button"
-                    onClick={this.updateCategories}
-                    data-toggle="modal"
-                    data-target="#new-transaction-modal"
-                    data-dismiss="modal"
-                >Add latest transaction</button>
-
-                <Transactions>
+                <Transactions updateCategories={this.updateCategories}>
                     {this.state.transactionContent}
                 </Transactions>
 

@@ -1,13 +1,23 @@
 #sidebar {
     position: fixed;
     height: 100%;
-    width: 75px;
+    width: 150px;
     z-index: 1;
     top: 0;
     left: 0;
     padding: 20px;
     background-color: grey;
     overflow-y: auto;
+}
+
+#budget-preview {
+  position: relative;
+  text-align: center;
+  top: 50px;
+  left: 0;
+  z-index: 2;
+  margin: auto;
+  border: 2px solid black;
 }
 
 #create-budget {
@@ -22,7 +32,6 @@
 
     border: 2px solid black;
     border-color: black;
-    border-radius: 17.25px;
 }
 
 .user-bdgt {
@@ -37,7 +46,6 @@
 
     border: 2px solid black;
     border-color: black;
-    border-radius: 17.25px;
     user-select: none;
 }
 
