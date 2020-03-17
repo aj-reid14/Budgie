@@ -88,6 +88,9 @@ class Budget extends Component {
 
     }
 
+
+    
+
     removeCategory = name => {
         let newCategoryData = this.state.budget.categories;
         let removeAmount = newCategoryData.filter(category => category.categoryName === name)[0].categoryAmount;
@@ -211,6 +214,21 @@ class Budget extends Component {
         }
 
     }
+
+    deleteBudget = () => {
+
+        let user = sessionStorage.getItem("username");
+    
+        API.deleteBudget(user, this.state.currentBudget)
+            .then(res => {
+                this.checkForUser();
+            })
+            .catch(err => console.log(err));
+        this.updatePieChart(this.state.budget.name);
+
+    }
+
+    
 
     createBudget = () => {
 
@@ -452,6 +470,12 @@ class Budget extends Component {
                         </form>
                     </div>
                 </NewBudgetModal>
+                <button
+                                        id="btn-delete-budget"
+                                        type="button"                            
+                                        onClick={this.deleteBudget}
+                                        className="btn btn-success">
+                                            Delete this budget</button>
 
                 {pieChart}
 
