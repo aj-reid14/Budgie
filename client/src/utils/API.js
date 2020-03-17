@@ -22,7 +22,7 @@ export default {
   addBudget: function(username, data) {
     return axios.put("/api/home/" + username, data)
   },
-  addTransaction: function(username, budgetName) {
-    return axios.get(`/api/home/${username}/${budgetName}`)
+  addTransaction: function(username, budgetName, data) {
+    return axios.put(`/api/home/${username}/${budgetName}`, data)
   }
 };

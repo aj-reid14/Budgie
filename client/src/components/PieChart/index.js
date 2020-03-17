@@ -1,5 +1,6 @@
 import React from 'react';
 import CanvasJSReact from '../../canvasjs.react';
+import "./style.css"
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -10,13 +11,12 @@ function PieChart(props) {
       text: props.budgetName
     },
     data: [{
-      indexLabelPlacement: "inside",
       type: "pie",
       dataPoints: props.pieData
     }]}
 
   return (
-    <div>
+    <div id="piechart-area">
     <CanvasJSChart options={options}
     /* onRef = {ref => this.chart = ref} */
     />

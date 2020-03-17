@@ -10,6 +10,7 @@ const userSchema = new Schema({
         transactions: [{
             transactionName: {type: String, required: true},
             transactionAmount: {type: Number, min:1, required:true},
+            category: {type: String, required: true}
         }], 
         categories: [{
             categoryName: {type: String, required: true},

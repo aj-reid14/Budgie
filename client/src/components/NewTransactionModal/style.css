@@ -1,0 +1,21 @@
+#btn-save-transaction{
+    margin: auto;
+}
+
+#category-list {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#btn-save-transaction {
+    margin-top: 10px;
+}
+
+.modal-body.btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    margin: auto;
+}
