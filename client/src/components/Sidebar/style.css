@@ -11,13 +11,18 @@
 }
 
 #budget-preview {
-  position: relative;
+  position: absolute;
   text-align: center;
-  top: 50px;
-  left: 0;
-  z-index: 2;
+  text-decoration: underline;
+  text-decoration-color: black;
   margin: auto;
-  border: 2px solid black;
+  width: 80%;
+  top: 90px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  color: white;
+  /* border: 2px solid black; */
 }
 
 #create-budget {
@@ -26,9 +31,8 @@
     background-color: yellow;
     width: 100%;
     height: 34.5px;
-    top: 50px;
+    top: 125px;
     z-index: -5;
-    margin: 10px 0;
 
     border: 2px solid black;
     border-color: black;
@@ -40,7 +44,7 @@
     background-color: rgb(132, 211, 139);
     width: 100%;
     height: 34.5px;
-    top: 50px;
+    top: 125px;
     z-index: -5;
     margin: 10px 0;
 
