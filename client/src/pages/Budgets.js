@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Sidebar from "../components/Sidebar";
+import BudgetIcon from "../components/BudgetIcon";
 import NewBudgetModal from "../components/NewBudgetModal";
 import PieChart from "../components/PieChart";
 import { Container, Row } from "../components/Grid";
@@ -63,8 +64,10 @@ class Budget extends Component {
                             userBudgets: createdBudgets
                         })
 
-                        if (this.state.userBudgets.length != 0) {
+                        if ((this.state.userBudgets.length != 0) && (!this.state.currentBudget)) {
                             this.updatePieChart(this.state.userBudgets[0].budgetName);
+                        } else {
+                            this.updatePieChart(this.state.currentBudget);
                         }
                     }
                 });
@@ -244,11 +247,7 @@ class Budget extends Component {
             };
 
             API.addTransaction(user, this.state.currentBudget, newTransaction)
-                .then(res => {
-                    this.setState({
-                        transactionContent: this.updateTransactions(this.state.currentBudget)
-                    });
-                })
+                .then(this.checkForUser)
                 .catch(err => console.log(err));
         }
     }
@@ -284,7 +283,6 @@ class Budget extends Component {
 
             
         });
-        this.updateTransactions();
     }
 
     updateCategories = () => {
@@ -302,14 +300,18 @@ class Budget extends Component {
     updateTransactions = (budgetName) => {
         let budget = this.state.userBudgets.filter(userBudget => userBudget.budgetName === budgetName)[0];
         let transactions = [];
-        
-        if (!budget) {
 
+        if (!budget) {
+            return;
         } else {
-            budget.transactions.forEach(transaction => {
-                let newTransaction = <h3 className="transaction-item">{transaction.category} --- {transaction.transactionName} --- {transaction.transactionAmount}</h3>
-                transactions.push(newTransaction);
-            });
+            if (!budget.transactions) {
+                return;
+            } else {
+                budget.transactions.forEach(transaction => {
+                    let newTransaction = <h3 className="transaction-item">{transaction.category} --- {transaction.transactionName} --- {transaction.transactionAmount}</h3>
+                    transactions.push(newTransaction);
+                });
+            }
         }
 
         return transactions;
@@ -335,13 +337,18 @@ class Budget extends Component {
         let budgetIcons = [];
         this.state.userBudgets.forEach(budget => {
             let newBudgetButton = (
-                <div
-                className="user-bdgt"
-                onMouseEnter={() => {this.updateBudgetPreview(budget.budgetName)}}
-                onMouseLeave={() => {this.updateBudgetPreview("Select a Budget")}}
-                onClick={() => { this.updatePieChart(budget.budgetName) }}>
-                    <div budget-name={budget.budgetName}></div>
-                </div>
+                // <div
+                // className="user-bdgt"
+                // onMouseEnter={() => {this.updateBudgetPreview(budget.budgetName)}}
+                // onMouseLeave={() => {this.updateBudgetPreview("Select a Budget")}}
+                // onClick={() => { this.updatePieChart(budget.budgetName) }}>
+                //     <div budget-name={budget.budgetName}></div>
+                // </div>
+                <BudgetIcon budgetName={budget.budgetName}
+                            updatePieChart={() => {this.updatePieChart(budget.budgetName)}}
+                            defaultBudgetPreview={() => {this.updateBudgetPreview("Select a Budget");}}
+                            updateBudgetPreview={() => {this.updateBudgetPreview(budget.budgetName);}}
+                            />
             );
             budgetIcons.push(newBudgetButton);
         });
