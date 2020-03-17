@@ -337,13 +337,6 @@ class Budget extends Component {
         let budgetIcons = [];
         this.state.userBudgets.forEach(budget => {
             let newBudgetButton = (
-                // <div
-                // className="user-bdgt"
-                // onMouseEnter={() => {this.updateBudgetPreview(budget.budgetName)}}
-                // onMouseLeave={() => {this.updateBudgetPreview("Select a Budget")}}
-                // onClick={() => { this.updatePieChart(budget.budgetName) }}>
-                //     <div budget-name={budget.budgetName}></div>
-                // </div>
                 <BudgetIcon budgetName={budget.budgetName}
                             updatePieChart={() => {this.updatePieChart(budget.budgetName)}}
                             defaultBudgetPreview={() => {this.updateBudgetPreview("Select a Budget");}}
