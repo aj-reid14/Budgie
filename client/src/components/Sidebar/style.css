@@ -46,6 +46,14 @@
     color: white;
 }
 
+.text{
+  visibility: hidden;
+}
+
+.text:hover{
+  visibility: visible;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 0px;

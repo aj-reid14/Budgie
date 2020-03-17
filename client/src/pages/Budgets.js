@@ -222,7 +222,7 @@ class Budget extends Component {
         this.state.userBudgets.forEach(budget => {
             let newBudgetButton = (
                 <div className="user-bdgt" onClick={() => { this.updatePieChart(budget.budgetName) }}>
-                    <div budget-name={budget.budgetName}></div>
+                    <div budget-name={budget.budgetName}><p className="text">{budget.budgetName}</p></div>
                 </div>
             );
             budgetIcons.push(newBudgetButton);
