@@ -8,7 +8,6 @@ class Transactions extends Component {
         return (
             <div id="transactions">
                 {this.props.children}
-                <div id="create-transaction" data-toggle="modal" data-target="#new-transaction-modal"></div>
             </div>
         )
     }

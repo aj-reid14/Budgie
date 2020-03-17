@@ -11,7 +11,6 @@ function PieChart(props) {
       text: props.budgetName
     },
     data: [{
-      indexLabelPlacement: "inside",
       type: "pie",
       dataPoints: props.pieData
     }]}

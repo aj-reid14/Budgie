@@ -1,0 +1,7 @@
+#transactions {
+    margin: auto;
+}
+
+.transaction-item {
+    border: 1px solid black;
+}

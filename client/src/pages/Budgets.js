@@ -5,7 +5,7 @@ import PieChart from "../components/PieChart";
 import { Container, Row } from "../components/Grid";
 import API from "../utils/API";
 import "./Budget.css";
-import Transactions from "../components/Transaction";
+import Transactions from "../components/Transactions";
 import NewTransactionModal from "../components/NewTransactionModal";
 
 let containerStyle = {
@@ -32,6 +32,7 @@ class Budget extends Component {
         },
         transactionCategories: "",
         userTransactions: [],
+        transactionContent: [],
         budget: {
             budgetName: "",
             budgetTotal: 0,
@@ -60,6 +61,10 @@ class Budget extends Component {
                         this.setState({
                             userBudgets: createdBudgets
                         })
+
+                        if (this.state.userBudgets.length != 0) {
+                            this.updatePieChart(this.state.userBudgets[0].budgetName);
+                        }
                     }
                 });
         }
@@ -75,7 +80,7 @@ class Budget extends Component {
                 categoryAmount: this.state.newCategoryAmount
             });
 
-        this.updateCategoryTable(newCategoryData, {op: "+", amount: this.state.newCategoryAmount});
+        this.updateCategoryTable(newCategoryData, { op: "+", amount: this.state.newCategoryAmount });
 
     }
 
@@ -85,7 +90,7 @@ class Budget extends Component {
 
         newCategoryData = newCategoryData.filter(category => category.categoryName != name);
 
-        this.updateCategoryTable(newCategoryData, {op: "-", amount: removeAmount});
+        this.updateCategoryTable(newCategoryData, { op: "-", amount: removeAmount });
 
     }
 
@@ -166,22 +171,41 @@ class Budget extends Component {
                 });
                 break;
 
-                case "transactionAmount":
-                    this.setState({
-                        newTransaction: {
-                            name: this.state.newTransaction.name,
-                            amount: value,
-                            category: this.state.newTransaction.category
-                        }
-                    });
-                    break;
-        
+            case "transactionAmount":
+                this.setState({
+                    newTransaction: {
+                        name: this.state.newTransaction.name,
+                        amount: value,
+                        category: this.state.newTransaction.category
+                    }
+                });
+                break;
+
             default:
                 this.setState({
                     [name]: value
                 });
                 break;
         }
+    }
+
+    handleSelectChange = (event) => {
+        const { name, value } = event.target;
+
+        if (name === "categoryList") {
+            this.setState({
+                newTransaction: {
+                    name: this.state.newTransaction.name,
+                    amount: this.state.newTransaction.amount,
+                    category: value
+                }
+            })
+        } else {
+            this.setState({
+                [name]: value
+            })
+        }
+
     }
 
     createBudget = () => {
@@ -200,7 +224,7 @@ class Budget extends Component {
         this.updatePieChart(this.state.budget.name);
     }
 
-    addTransaction = (budgetName) => {
+    addTransaction = () => {
         let user = sessionStorage.getItem("username");
 
         if (!user) {
@@ -208,12 +232,15 @@ class Budget extends Component {
         } else {
             let newTransaction = {
                 transactionName: this.state.newTransaction.name,
-                transactionAmount: this.state.newTransaction.amount
+                transactionAmount: this.state.newTransaction.amount,
+                category: this.state.newTransaction.category
             };
 
             API.addTransaction(user, this.state.currentBudget, newTransaction)
                 .then(res => {
-                    console.log(res);
+                    this.setState({
+                        transactionContent: this.updateTransactions(this.state.currentBudget)
+                    });
                 })
                 .catch(err => console.log(err));
         }
@@ -228,15 +255,18 @@ class Budget extends Component {
                 budget.categories.forEach(category => {
                     let amount = parseInt(category.categoryAmount);
                     dataPoints.push(
-                        { label: category.categoryName, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `$${category.categoryAmount}` }
+                        { label: category.categoryAmount, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `${category.categoryName} - ${category.categoryAmount}` }
                     )
                 })
+
+                let updatedTransactions = this.updateTransactions(budgetName);
 
                 this.setState({
                     currentBudget: budgetName,
                     budgetCreated: true,
                     pieData: dataPoints,
                     tableContent: [],
+                    transactionContent: updatedTransactions,
                     budget: {
                         budgetName: "",
                         budgetTotal: 0,
@@ -244,7 +274,10 @@ class Budget extends Component {
                     }
                 });
             }
+
+            
         });
+        this.updateTransactions();
     }
 
     updateCategories = () => {
@@ -257,6 +290,22 @@ class Budget extends Component {
         this.setState({
             userTransactions: transactions
         });
+    }
+
+    updateTransactions = (budgetName) => {
+        let budget = this.state.userBudgets.filter(userBudget => userBudget.budgetName === budgetName)[0];
+        let transactions = [];
+        
+        if (!budget) {
+
+        } else {
+            budget.transactions.forEach(transaction => {
+                let newTransaction = <h3 className="transaction-item">{transaction.category} --- {transaction.transactionName} --- {transaction.transactionAmount}</h3>
+                transactions.push(newTransaction);
+            });
+        }
+
+        return transactions;
     }
 
     verifyBudgetInfo = () => {
@@ -395,7 +444,7 @@ class Budget extends Component {
 
                 {pieChart}
 
-                <button 
+                <button
                     id="btn-new-transaction"
                     className="btn btn-success col-md-12"
                     type="button"
@@ -403,7 +452,11 @@ class Budget extends Component {
                     data-toggle="modal"
                     data-target="#new-transaction-modal"
                     data-dismiss="modal"
-                    >Add latest transaction</button>
+                >Add latest transaction</button>
+
+                <Transactions>
+                    {this.state.transactionContent}
+                </Transactions>
 
                 <NewTransactionModal>
                     <div className="modal-body">
@@ -413,7 +466,10 @@ class Budget extends Component {
                                 <div className="row">
                                     <label htmlFor="category-list" className="col-form-label">Category</label>
                                     <div className="form-group col-md-12">
-                                        <select id="category-list">
+                                        <select
+                                            id="category-list"
+                                            name="categoryList"
+                                            onChange={this.handleSelectChange}>
                                             {this.state.userTransactions}
                                         </select>
                                     </div>
@@ -422,7 +478,7 @@ class Budget extends Component {
 
                                 <div className="row modal-content-group">
 
-                                <div className="form-group col-md-8">
+                                    <div className="form-group col-md-8">
                                         <label htmlFor="transction-name" className="col-form-label">Transaction Name</label>
                                         <input
                                             id="transaction-name"
@@ -454,7 +510,7 @@ class Budget extends Component {
                                     type="button"
                                     data-dismiss="modal"
                                     onClick={this.addTransaction}
-                                    disabled={!this.state.transactionName || this.state.transactionAmount <= 0}
+                                    disabled={!this.state.newTransaction.name || !this.state.newTransaction.category || this.state.newTransaction.amount <= 0}
                                     className="btn btn-success col-md-12">Save Transaction</button>
                             </Container>
                         </form>
