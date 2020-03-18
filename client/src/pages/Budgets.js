@@ -8,6 +8,7 @@ import API from "../utils/API";
 import "./Budget.css";
 import Transactions from "../components/Transactions";
 import NewTransactionModal from "../components/NewTransactionModal";
+import Limit from "../components/Limit"
 
 let containerStyle = {
     "background-color": "red",
@@ -39,7 +40,8 @@ class Budget extends Component {
             budgetName: "",
             budgetTotal: 0,
             categories: []
-        }
+        },
+        clickedcategory:""
     }
 
     componentDidMount() {
@@ -87,7 +89,10 @@ class Budget extends Component {
 
     }
 
+    checkamount = () => {
 
+
+    }
 
 
     removeCategory = name => {
@@ -480,6 +485,8 @@ class Budget extends Component {
                 </NewBudgetModal>
 
                 {pieChart}
+
+                <Limit max={this.state.budget.budgetTotal}></Limit>
 
                 <Transactions updateCategories={this.updateCategories}>
                     {this.state.transactionContent}
