@@ -290,7 +290,7 @@ class Budget extends Component {
         budget.categories.forEach(category => {
             let amount = parseInt(category.categoryAmount);
             dataPoints.push(
-                { label: category.categoryAmount, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `${category.categoryName} - ${category.categoryAmount}` }
+                { label: category.categoryAmount, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `${category.categoryName} - $${category.categoryAmount}` }
             )
         })
 

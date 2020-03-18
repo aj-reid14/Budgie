@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import img from "./birb.png";
 
 function Nav() {
   return (
@@ -7,6 +8,9 @@ function Nav() {
       <a className="navbar-brand" href="/">
         Budgie
       </a>
+
+      <img src = {img} alt="budgie" height="42" width="42"></img>
+      
     </nav>
   );
 }
