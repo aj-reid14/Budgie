@@ -12,5 +12,6 @@
 
 #btn-new-transaction {
     margin: 10px 0;
-    width: 75%;    
+    width: 75%;
+    border: 2px solid black;
 }
