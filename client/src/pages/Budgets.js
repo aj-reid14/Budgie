@@ -22,7 +22,7 @@ class Budget extends Component {
         newCategoryName: "",
         newCategoryAmount: 0,
         tableContent: [],
-        pieData: [],
+        pieData: {},
         budgetVerified: false,
         budgetCreated: false,
         budgetUsed: 0,
@@ -229,18 +229,31 @@ class Budget extends Component {
 
     createBudget = () => {
 
+        if (this.state.budgetUsed != this.state.budget.budgetTotal) {
+            let newCategoryData = this.state.budget.categories;
+            let miscAmount = parseInt(this.state.budget.budgetTotal) - parseInt(this.state.budgetUsed);
+
+        newCategoryData.push(
+            {
+                categoryName: "Misc.",
+                categoryAmount: miscAmount
+            });
+
+        this.updateCategoryTable(newCategoryData, { op: "+", amount: miscAmount});
+        }
+
         let user = sessionStorage.getItem("username");
         let updatedBudgets = this.state.userBudgets;
         updatedBudgets.push(this.state.budget);
 
         API.addBudget(user, this.state.budget)
             .then(res => {
+                this.updatePieChart(this.state.budget.budgetName);
                 this.setState({
                     userBudgets: updatedBudgets
                 })
             })
             .catch(err => console.log(err));
-        this.updatePieChart(this.state.budget.budgetName);
     }
 
     updateBudgetPreview = (text) => {
@@ -262,7 +275,16 @@ class Budget extends Component {
             };
 
             API.addTransaction(user, this.state.currentBudget, newTransaction)
-                .then(this.checkForUser)
+                .then(() => {
+                    this.setState({
+                        newTransaction: {
+                            amount: 0,
+                            name: "",
+                            category: this.state.newTransaction.category
+                        }
+                    });
+                    this.checkForUser();
+                })
                 .catch(err => console.log(err));
         }
     }
@@ -277,7 +299,7 @@ class Budget extends Component {
             } else {
                 this.setState({
                     currentBudget: "",
-                    pieData: []
+                    pieData: {}
                 });
 
                 return;
@@ -290,7 +312,7 @@ class Budget extends Component {
         budget.categories.forEach(category => {
             let amount = parseInt(category.categoryAmount);
             dataPoints.push(
-                { label: category.categoryAmount, y: (Math.round((amount / budgetTotal) * 100)), indexLabel: `${category.categoryName} - $${category.categoryAmount}` }
+                { label: category.categoryName, y: amount, total: budgetTotal}
             )
         })
 
@@ -299,7 +321,10 @@ class Budget extends Component {
         this.setState({
             currentBudget: budgetName,
             budgetCreated: true,
-            pieData: dataPoints,
+            pieData: {
+                data: dataPoints,
+                total: budgetTotal
+            },
             tableContent: [],
             transactionContent: updatedTransactions,
             budgetUsed: 0,
@@ -334,7 +359,14 @@ class Budget extends Component {
                 return;
             } else {
                 budget.transactions.forEach(transaction => {
-                    let newTransaction = <h3 className="transaction-item">{transaction.category} --- {transaction.transactionName} --- {transaction.transactionAmount}</h3>
+                    // let newTransaction = <h3 className="transaction-item">{transaction.category} --- {transaction.transactionName} --- {transaction.transactionAmount}</h3>
+                    let newTransaction = (
+                        <tr>
+                            <td>{transaction.category}</td>
+                            <td>{transaction.transactionName}</td>
+                            <td>${transaction.transactionAmount}</td>
+                        </tr>
+                    );
                     transactions.push(newTransaction);
                 });
             }
@@ -356,7 +388,7 @@ class Budget extends Component {
 
         let pieChart = "";
 
-        if (this.state.pieData.length != 0) {
+        if (this.state.pieData.data) {
             pieChart = (<PieChart deleteBudget={this.deleteBudget} budgetName={this.state.currentBudget} pieData={this.state.pieData} />)
         }
 
