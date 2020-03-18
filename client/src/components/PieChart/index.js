@@ -7,6 +7,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 function PieChart(props) {
 
   const options = {
+    backgroundColor: "transparent",
     title: {
       text: props.budgetName
     },
@@ -27,7 +28,9 @@ function PieChart(props) {
 
   return (
     <div id="piechart-area">
-      <CanvasJSChart options={options} />
+      <div id="theChart">
+        <CanvasJSChart options={options} />
+      </div>
 
       <button
         id="btn-delete-budget"
@@ -35,7 +38,7 @@ function PieChart(props) {
         onClick={props.deleteBudget}
         className="btn btn-danger">
         Delete Budget</button>
-        
+
     </div>
   )
 }

@@ -3,3 +3,9 @@
 div {
     font-family: 'Viga', sans-serif;
 }
+
+body {
+    background-image: url("./pages/background.jpg");
+    background-size: cover;
+
+}
