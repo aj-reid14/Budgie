@@ -10,9 +10,18 @@ function PieChart(props) {
     title: {
       text: props.budgetName
     },
+    subtitles: [{
+      text: `Total - $${props.pieData.total}`,
+      fontSize: 20
+    }],
+    animationEnabled: true,
     data: [{
       type: "pie",
-      dataPoints: props.pieData
+      showInLegend: true,
+      toolTipContent: "<b>{label}</b>: ${y}",
+      legendText: "{label}",
+      indexLabel: "{label} - ${y}",
+      dataPoints: props.pieData.data
     }]
   }
 

@@ -2,10 +2,8 @@ import React, {Component} from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./pages/Login";
 import Budget from "./pages/Budgets";
-import Books from "./pages/Books";
-import Detail from "./pages/Detail";
-import NoMatch from "./pages/NoMatch";
 import Nav from "./components/Nav";
+import "./App.css";
 
 class App extends Component {
   state = {

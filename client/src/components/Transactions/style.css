@@ -4,6 +4,11 @@
     text-align: center;
 }
 
+#transactions h2 {
+    margin-top: 30px;
+    text-decoration: underline;
+}
+
 .transaction-item {
     width: 75%;
     margin: auto;
@@ -14,4 +19,23 @@
     margin: 10px 0;
     width: 75%;
     border: 2px solid black;
+}
+
+#transaction-table {
+    margin-top: 30px;
+    margin-left: 20px;
+}
+
+#transaction-table th {
+    border: 3px solid black;
+    text-align: center;
+}
+
+#transaction-table td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+#transaction-table tr:nth-child(even) {
+    background-color: rgb(183, 255, 195);
 }
