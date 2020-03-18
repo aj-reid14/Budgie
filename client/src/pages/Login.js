@@ -67,35 +67,37 @@ class Login extends Component {
                 <Container fluid>
                     <Row>
                         <Col size="md-4"></Col>
-                        <Col size="md-4">
+                        <div size="md-4">
                             <form>
                                 <Input
                                     value={this.state.username}
                                     onChange={this.handleInputChange}
                                     name="username"
-                                    placeholder="Username"
-                                />
+                                    placeholder="Username"/>
+
                                 <Input
                                     value={this.state.password}
                                     onChange={this.handleInputChange}
                                     name="password"
                                     type="password"
-                                    placeholder="Password (min 8 characters)"
-                                />
-                                <FormBtn
+                                    placeholder="Password (min 8 characters)"/>
+
+                                <button
+                                    id="login-btn"
+                                    className="btn btn-success"
                                     disabled={!((this.state.username && this.state.password) && this.state.password.length >= 8)}
-                                    onClick={this.handleFormLogin}
-                                >
-                                    Login
-                    </FormBtn>
-                                <FormBtn
+                                    onClick={this.handleFormLogin}>
+                                    Login</button>
+
+                                <button
+                                    id="signup-btn"
+                                    className="btn btn-primary"
                                     disabled={!((this.state.username && this.state.password) && this.state.password.length >= 8)}
-                                    onClick={this.handleFormSubmit}
-                                >
-                                    Sign Up
-                    </FormBtn>
+                                    onClick={this.handleFormSubmit}>
+                                    Sign Up</button>
+                                    
                             </form>
-                        </Col>
+                        </div>
                         <Col size="md-4"></Col>
                     </Row>
                 </Container>
