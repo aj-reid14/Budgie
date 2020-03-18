@@ -13,15 +13,22 @@ function PieChart(props) {
     data: [{
       type: "pie",
       dataPoints: props.pieData
-    }]}
+    }]
+  }
 
   return (
     <div id="piechart-area">
-    <CanvasJSChart options={options}
-    /* onRef = {ref => this.chart = ref} */
-    />
-  </div>
-  )
-  }
+      <CanvasJSChart options={options} />
 
-  export default PieChart;
+      <button
+        id="btn-delete-budget"
+        type="button"
+        onClick={props.deleteBudget}
+        className="btn btn-danger">
+        Delete Budget</button>
+        
+    </div>
+  )
+}
+
+export default PieChart;
