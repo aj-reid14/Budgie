@@ -1,0 +1,44 @@
+.modal-content-group {
+    border: solid black;
+    border-width: 1px 0;
+}
+
+#budget-total {
+    color: rgb(7, 82, 7);
+    text-align: center;
+}
+
+#budget-remaining {
+    color: rgb(94, 1, 1);
+    text-align: center;
+}
+
+#btn-add-category {
+    height: 100%;
+    margin: auto;
+}
+
+#btn-save-budget {
+    margin: auto;
+    margin-top: 10px;
+}
+
+#category-table td, #category-table th {
+    border: 1px solid black;
+    text-align: center;
+}
+
+.category-delete {
+    float: left;
+}
+
+#category-table tr:nth-child(even) {
+    background-color: rgb(211, 211, 211);
+}
+
+::-webkit-input-placeholder {
+    font-style: italic;
+    text-align: center;
+ }
+
+
