@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css?family=Viga&display=swap');
+
+div {
+    font-family: 'Viga', sans-serif;
+}
+
+body {
+    background-image: url("./pages/background.jpg");
+    background-size: cover;
+
+}
