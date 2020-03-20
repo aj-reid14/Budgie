@@ -479,7 +479,7 @@ class Budget extends Component {
                                     </div>
                                     <button
                                         id="btn-add-category"
-                                        type="button"
+                                        type="submit"
                                         onClick={this.addCategoryData}
                                         disabled={((this.state.newCategoryAmount <= 0) || !this.state.newCategoryName)}
                                         className="btn btn-primary">Add</button>
@@ -565,7 +565,7 @@ class Budget extends Component {
 
                                 <button
                                     id="btn-save-transaction"
-                                    type="button"
+                                    type="submit"
                                     data-dismiss="modal"
                                     onClick={this.addTransaction}
                                     disabled={!this.state.newTransaction.name || !this.state.newTransaction.category || this.state.newTransaction.amount <= 0}
