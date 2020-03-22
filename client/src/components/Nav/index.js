@@ -23,10 +23,7 @@ function Nav() {
       
       <div id = "greeting"> {greeting} </div>
 
-      <button
-                                        id="btn-logout"
-                                        type="button"                                    
-                                        className="btn btn-danger">log out</button>
+      
       
     </nav>
   );
