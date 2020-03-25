@@ -16,20 +16,36 @@ class Transactions extends Component {
                     data-toggle="modal"
                     data-target="#new-transaction-modal"
                     data-dismiss="modal"
-                >Add latest transaction</button>
+                >Add New Transaction</button>
 
-                <h2>Transactions</h2>
+                <button
+                    id="btn-view-transactions"
+                    className="btn btn-success col-md-12"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#transaction-collapse"
+                    aria-expanded="true"
+                    aria-controls="transaction-collapse">
+                    View Transactions</button>
 
-                <table id="transaction-table" width="100%">
-                    <tbody>
-                        <tr>
-                            <th className="tr-category">Category</th>
-                            <th className="tr-name">Name</th>
-                            <th className="tr-amount">Amount</th>
-                        </tr>
-                        {this.props.children}
-                    </tbody>
-                </table>
+                <div class="accordion" id="transaction-accordion">
+
+                    <div id="transaction-collapse" class="collapse show" aria-labelledby="headingOne" data-parent="#transaction-accordion">
+                            <table id="transaction-table" width="100%">
+                                <tbody>
+                                    <tr>
+                                        <th className="tr-category">Category</th>
+                                        <th className="tr-name">Name</th>
+                                        <th className="tr-amount">Amount</th>
+                                    </tr>
+                                    {this.props.children}
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+
+
+
             </div>
         )
     }
