@@ -5,3 +5,17 @@
     z-index: 10;
     border-bottom: 2px solid black;
 }
+
+
+#greeting{
+
+padding-left: 20px;
+font-size: large;
+
+}
+
+#btn-logout{
+    display: inline-block;
+    vertical-align: middle;
+    float: right;
+}
